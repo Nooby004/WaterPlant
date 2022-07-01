@@ -14,7 +14,7 @@
         android:theme="@style/Theme.WaterPlant"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".feature_plant_list.presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.WaterPlant">
