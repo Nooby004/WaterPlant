@@ -14,8 +14,9 @@ interface PlantDao {
     @Query(value = "SELECT * FROM Plant")
     fun getPlantsWithWaterPlants(): Flow<List<PlantWithWaterPlants>>
 
+    @Transaction
     @Query(value = "SELECT * FROM Plant where id =:id")
-    fun getPlantById(id: Int): Plant?
+    suspend fun getPlantById(id: Int): PlantWithWaterPlants?
 
     @Insert(onConflict = REPLACE)
     suspend fun addPlant(plant: Plant)

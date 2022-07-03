@@ -1,7 +1,6 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.plants
 
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.PlantItem
+import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
 
 @Composable
 fun PlantsScreen(
@@ -30,8 +30,10 @@ fun PlantsScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /*TODO*/ },
-                backgroundColor = MaterialTheme.colors.primary
+                onClick = {
+                    navController.navigate(Screen.AddEditPlantScreen.route)
+                },
+                backgroundColor = MaterialTheme.colors.onBackground
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Plant")
             }
@@ -43,19 +45,28 @@ fun PlantsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
+                .padding(16.dp)
         ) {
+
+            Text(
+                text = "Your plants",
+                style = MaterialTheme.typography.h4
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 items(state.plants) { plant ->
 
                     PlantItem(
-                        plant = plant.plant,
-                        bitmap = BitmapFactory.decodeFile(plant.waterPlants.maxByOrNull { t -> t.timestamp }!!.picturePath),
+                        plantWithWaterPlant = plant,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                /*TODO*/
-                            })
-
+                                navController.navigate(Screen.AddEditPlantScreen.route + "?plantId=${plant.plant.id}")
+                            },
+                        onDeleteClick = {
+                            /*TODO*/
+                        })
+                    
                     Spacer(modifier = Modifier.height(16.dp))
 
                 }

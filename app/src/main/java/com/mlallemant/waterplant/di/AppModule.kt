@@ -18,7 +18,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNoteDatabase(app: Application): PlantDatabase {
+    fun providePlantDatabase(app: Application): PlantDatabase {
         return Room.databaseBuilder(
             app,
             PlantDatabase::class.java,
@@ -28,7 +28,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNoteRepository(db: PlantDatabase): PlantRepository {
+    fun providePlantRepository(db: PlantDatabase): PlantRepository {
         return PlantRepositoryImpl(db.plantDao)
     }
 
@@ -39,7 +39,8 @@ object AppModule {
             getPlantsWithWaterPlants = GetPlantsWithWaterPlantsUseCase(repository),
             addPlant = AddPlantUseCase(repository),
             addWaterToPlant = AddWaterToPlantUseCase(repository),
-            deletePlant = DeletePlantUseCase(repository)
+            deletePlant = DeletePlantUseCase(repository),
+            getPlantWithWaterPlants = GetPlantWithWaterPlantsUseCase(repository)
         )
     }
 }

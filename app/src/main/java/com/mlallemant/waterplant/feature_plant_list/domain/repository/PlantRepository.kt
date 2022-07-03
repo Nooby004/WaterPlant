@@ -9,6 +9,8 @@ interface PlantRepository {
 
     fun getPlantsWithWaterPlants(): Flow<List<PlantWithWaterPlants>>
 
+    suspend fun getPlantWithWaterPlants(id: Int): PlantWithWaterPlants?
+
     suspend fun addPlant(plant: Plant)
 
     suspend fun addWaterPlantToPlant(plant: Plant, waterPlant: WaterPlant)
