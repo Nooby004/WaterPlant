@@ -67,7 +67,8 @@ class AddEditPlantViewModel @Inject constructor(
                     try {
                         plantUseCases.addPlant(
                             Plant(
-                                name = plantName.value.text
+                                name = plantName.value.text,
+                                id = currentPlantId
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)

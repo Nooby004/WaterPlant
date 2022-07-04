@@ -1,5 +1,6 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -7,6 +8,8 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -20,6 +23,7 @@ fun AddEditPlantScreen(
 ) {
 
     val nameState = viewModel.plantName.value
+    val focusManager = LocalFocusManager.current
 
     val scaffoldState = rememberScaffoldState()
 
@@ -56,6 +60,11 @@ fun AddEditPlantScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
+                       .pointerInput(Unit) {
+                detectTapGestures (onTap = {
+                    focusManager.clearFocus()
+                } )
+            }
         ) {
 
             TransparentHintTextField(
