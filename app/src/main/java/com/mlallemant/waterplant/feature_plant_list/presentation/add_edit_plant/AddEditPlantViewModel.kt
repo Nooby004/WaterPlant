@@ -60,6 +60,10 @@ class AddEditPlantViewModel @Inject constructor(
         }
     }
 
+    fun getPlantId(): Int? {
+        return currentPlantId
+    }
+
     fun onEvent(event: AddEditPlantEvent) {
         when (event) {
 
@@ -104,8 +108,7 @@ class AddEditPlantViewModel @Inject constructor(
                     }
                 }
             }
-            is AddEditPlantEvent.TakePicture -> {
-
+            is AddEditPlantEvent.OpenPreview -> {
             }
         }
     }

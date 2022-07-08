@@ -35,7 +35,7 @@ fun CameraControls(cameraUIAction: (CameraEvent) -> Unit) {
         CameraControl(
             Icons.Sharp.FlipCameraAndroid,
             R.string.icn_camera_view_switch_camera_content_description,
-            modifier = Modifier.size(64.dp),
+            modifier = Modifier.size(48.dp),
             onClick = { cameraUIAction(CameraEvent.OnSwitchCameraClick) }
         )
 
@@ -43,7 +43,7 @@ fun CameraControls(cameraUIAction: (CameraEvent) -> Unit) {
             Icons.Sharp.Lens,
             R.string.icn_camera_view_camera_shutter_content_description,
             modifier = Modifier
-                .size(64.dp)
+                .size(48.dp)
                 .padding(1.dp)
                 .border(1.dp, Color.White, CircleShape),
             onClick = { cameraUIAction(CameraEvent.OnCameraClick) }
@@ -52,7 +52,7 @@ fun CameraControls(cameraUIAction: (CameraEvent) -> Unit) {
         CameraControl(
             Icons.Sharp.PhotoLibrary,
             R.string.icn_camera_view_view_gallery_content_description,
-            modifier = Modifier.size(64.dp),
+            modifier = Modifier.size(48.dp),
             onClick = { cameraUIAction(CameraEvent.OnGalleryViewClick) }
         )
 

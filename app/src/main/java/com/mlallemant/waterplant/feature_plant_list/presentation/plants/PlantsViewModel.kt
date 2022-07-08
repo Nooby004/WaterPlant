@@ -16,11 +16,9 @@ class PlantsViewModel @Inject constructor(
     private val plantUseCases: PlantUseCases
 ) : ViewModel() {
 
-
     private val _state = mutableStateOf(PlantsState())
     val state: State<PlantsState> = _state
-
-
+    
     private var getPlantsJob: Job? = null
 
     init {

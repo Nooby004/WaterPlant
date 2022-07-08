@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.components.PlantImageView
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.components.PlantTextField
+import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -103,7 +104,9 @@ fun AddEditPlantScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             PlantImageView(
-
+                onClick = {
+                    navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${viewModel.getPlantId()}")
+                }
             )
 
         }

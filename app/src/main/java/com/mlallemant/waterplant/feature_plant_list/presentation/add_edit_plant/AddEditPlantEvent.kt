@@ -8,6 +8,6 @@ sealed class AddEditPlantEvent {
     data class EnteredWaterFrequency(val value: String) : AddEditPlantEvent()
     data class ChangeWaterFrequencyFocus(val focusState: FocusState) : AddEditPlantEvent()
     object SavePlant : AddEditPlantEvent()
-    object TakePicture : AddEditPlantEvent()
+    object OpenPreview : AddEditPlantEvent()
 
 }
