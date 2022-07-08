@@ -7,7 +7,11 @@ import androidx.room.PrimaryKey
 data class Plant(
 
     @PrimaryKey val id: Int? = null,
-    val name: String
+    val name: String,
+
+    val waterFrequency: String,
+
+    val picturePath: String
 
 )
 

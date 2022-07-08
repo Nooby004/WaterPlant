@@ -35,7 +35,11 @@ fun PlantsScreen(
                 },
                 backgroundColor = MaterialTheme.colors.onBackground
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Plant")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Plant",
+                    tint = MaterialTheme.colors.background
+                )
             }
         },
         scaffoldState = scaffoldState
@@ -66,7 +70,7 @@ fun PlantsScreen(
                         onDeleteClick = {
                             /*TODO*/
                         })
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                 }

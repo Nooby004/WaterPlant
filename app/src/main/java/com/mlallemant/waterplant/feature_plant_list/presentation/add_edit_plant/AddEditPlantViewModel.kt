@@ -26,9 +26,16 @@ class AddEditPlantViewModel @Inject constructor(
     )
     val plantName: State<PlantTextFieldState> = _plantName
 
+    private val _waterFrequency = mutableStateOf(
+        PlantTextFieldState(hint = "Enter water frequency...")
+    )
+    val waterFrequency: State<PlantTextFieldState> = _waterFrequency
+
+    private val _picturePath = mutableStateOf(String())
+    val picturePath: State<String> = _picturePath
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
-
 
     private var currentPlantId: Int? = null
 
@@ -40,6 +47,10 @@ class AddEditPlantViewModel @Inject constructor(
                         currentPlantId = plant.plant.id
                         _plantName.value = plantName.value.copy(
                             text = plant.plant.name,
+                            isHintVisible = false
+                        )
+                        _waterFrequency.value = waterFrequency.value.copy(
+                            text = plant.plant.waterFrequency,
                             isHintVisible = false
                         )
                     }
@@ -62,12 +73,24 @@ class AddEditPlantViewModel @Inject constructor(
                     isHintVisible = !event.focusState.isFocused && plantName.value.text.isBlank()
                 )
             }
+            is AddEditPlantEvent.EnteredWaterFrequency -> {
+                _waterFrequency.value = waterFrequency.value.copy(
+                    text = event.value
+                )
+            }
+            is AddEditPlantEvent.ChangeWaterFrequencyFocus -> {
+                _waterFrequency.value = waterFrequency.value.copy(
+                    isHintVisible = !event.focusState.isFocused && waterFrequency.value.text.isBlank()
+                )
+            }
             is AddEditPlantEvent.SavePlant -> {
                 viewModelScope.launch {
                     try {
                         plantUseCases.addPlant(
                             Plant(
                                 name = plantName.value.text,
+                                waterFrequency = waterFrequency.value.text,
+                                picturePath = picturePath.value,
                                 id = currentPlantId
                             )
                         )
@@ -80,6 +103,9 @@ class AddEditPlantViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+            is AddEditPlantEvent.TakePicture -> {
+
             }
         }
     }
