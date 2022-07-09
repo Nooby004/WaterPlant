@@ -4,11 +4,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mlallemant.waterplant.feature_plant_list.domain.model.InvalidPlantException
+import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,7 +22,7 @@ class PlantsViewModel @Inject constructor(
 
     private val _state = mutableStateOf(PlantsState())
     val state: State<PlantsState> = _state
-    
+
     private var getPlantsJob: Job? = null
 
     init {
@@ -34,6 +38,32 @@ class PlantsViewModel @Inject constructor(
                     plants = plantWithWaterPlants
                 )
             }.launchIn(viewModelScope)
+    }
+
+    fun onEvent(event: PlantsEvent) {
+        when (event) {
+            is PlantsEvent.AddWaterToPlant -> {
+
+                viewModelScope.launch {
+                    try {
+                        plantUseCases.addWaterToPlant(
+                            plantId = event.plantId,
+                            waterPlant = WaterPlant(
+                                picturePath = "/storage/emulated/0/Android/media/com.mlallemant.waterplant/WaterPlant/2022-07-09-19-55-41-813.jpg",
+                                timestamp = Calendar.getInstance().timeInMillis
+                            )
+                        )
+                        //_eventFlow.emit(AddEditPlantViewModel.UiEvent.SavePlant)
+                    } catch (e: InvalidPlantException) {
+                        /* _eventFlow.emit(
+                             AddEditPlantViewModel.UiEvent.ShowSnackBar(
+                                 message = e.message ?: "Could not save plant !"
+                             )
+                         )*/
+                    }
+                }
+            }
+        }
     }
 
 }

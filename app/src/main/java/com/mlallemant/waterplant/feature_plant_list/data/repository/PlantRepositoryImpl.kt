@@ -24,8 +24,8 @@ class PlantRepositoryImpl(
         dao.addPlant(plant)
     }
 
-    override suspend fun addWaterPlantToPlant(plant: Plant, waterPlant: WaterPlant) {
-        dao.addWaterPlantToPlant(plant, waterPlant)
+    override suspend fun addWaterPlantToPlant(plantId: Int, waterPlant: WaterPlant) {
+        dao.addWaterPlantToPlant(plantId, waterPlant)
     }
 
     override suspend fun deletePlant(plant: Plant) {

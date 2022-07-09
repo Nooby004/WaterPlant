@@ -25,8 +25,8 @@ interface PlantDao {
     suspend fun addWaterPlant(waterPlant: WaterPlant)
 
     @Transaction
-    suspend fun addWaterPlantToPlant(plant: Plant, waterPlant: WaterPlant) {
-        addPlant(plant)
+    suspend fun addWaterPlantToPlant(id: Int, waterPlant: WaterPlant) {
+        getPlantById(id)?.let { addPlant(it.plant) }
         addWaterPlant(waterPlant)
     }
 

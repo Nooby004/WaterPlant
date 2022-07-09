@@ -13,7 +13,7 @@ interface PlantRepository {
 
     suspend fun addPlant(plant: Plant)
 
-    suspend fun addWaterPlantToPlant(plant: Plant, waterPlant: WaterPlant)
+    suspend fun addWaterPlantToPlant(plantId: Int, waterPlant: WaterPlant)
 
     suspend fun deletePlant(plant: Plant)
 }

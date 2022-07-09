@@ -1,9 +1,10 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.plants.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -13,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -24,31 +26,28 @@ fun AddItem(
         modifier = modifier
     ) {
 
-
-        Card(
-            elevation = 4.dp,
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.clickable {
-                onAdd()
-            }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            verticalArrangement = Arrangement.Center,
+            Alignment.CenterHorizontally
         ) {
-            Column(
+
+            Card(
+                elevation = 4.dp,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.primaryVariant)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .background(MaterialTheme.colors.background)
+                    .clickable { onAdd() }
+                    .clip(shape = CircleShape)
+                    .aspectRatio(1f)
+                    .border(
+                        2.dp,
+                        color = MaterialTheme.colors.primaryVariant,
+                        CircleShape
+                    )
+                    .weight(0.8f),
             ) {
-
-                Text(
-                    text = "Ajouter une plante",
-                    color = MaterialTheme.colors.background,
-                    style = MaterialTheme.typography.h4
-                )
-
-                Spacer(modifier = Modifier.width(40.dp))
-                
                 Icon(
                     Icons.Default.Add,
                     contentDescription = "Add plant",
@@ -58,9 +57,16 @@ fun AddItem(
 
             }
 
+            Text(
+                text = "",
+                color = MaterialTheme.colors.primaryVariant,
+                style = MaterialTheme.typography.h6
+            )
         }
-    }
 
+
+    }
 }
+
 
 

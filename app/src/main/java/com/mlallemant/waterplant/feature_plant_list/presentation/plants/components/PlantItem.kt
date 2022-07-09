@@ -1,128 +1,90 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.plants.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.WaterDrop
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mlallemant.waterplant.feature_plant_list.domain.model.PlantWithWaterPlants
 import com.skydoves.landscapist.glide.GlideImage
 
+@ExperimentalFoundationApi
 @Composable
 fun PlantItem(
     plantWithWaterPlant: PlantWithWaterPlants,
-    onEdit: () -> Unit,
+    onOpenEdit: (plantId: Int?) -> Unit,
+    onClick: () -> Unit,
+    isSelected: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
     ) {
 
-        Card(
-            elevation = 4.dp,
-            shape = RoundedCornerShape(20.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            Arrangement.Center,
+            Alignment.CenterHorizontally
         ) {
-            Column(
+
+
+            GlideImage(
+                imageModel = plantWithWaterPlant.plant.picturePath,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.primaryVariant)
-                    .padding(16.dp)
-            ) {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Text(
-                        text = plantWithWaterPlant.plant.name,
-                        style = MaterialTheme.typography.h6,
-                        color = MaterialTheme.colors.background,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-
-                    IconButton(
-                        onClick = {
-                            onEdit()
-                        },
-                    ) {
-                        Icon(
-                            Icons.Default.Edit,
-                            contentDescription = "Edit plant",
-                            tint = MaterialTheme.colors.background,
+                    .clip(shape = CircleShape)
+                    .run {
+                        if (isSelected) {
+                            border(
+                                2.dp,
+                                color = MaterialTheme.colors.primaryVariant,
+                                CircleShape
+                            )
+                        } else {
+                            this
+                        }
+                    }
+                    .aspectRatio(1f)
+                    .weight(0.8f)
+                    .combinedClickable(
+                        onClick = { onClick() },
+                        onLongClick = {
+                            onOpenEdit(plantWithWaterPlant.plant.id)
+                        }
+                    ),
+                loading = {
+                    Box(modifier = Modifier.matchParentSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
-                }
+                },
+            )
 
+            Spacer(modifier = Modifier.height(4.dp))
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                GlideImage(
-                    imageModel = plantWithWaterPlant.plant.picturePath,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(20.dp)),
-                    loading = {
-                        Box(modifier = Modifier.matchParentSize()) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        }
-                    },
-                )
-
-            }
-
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(0.dp, 0.dp, 0.dp, 50.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-
-                OutlinedButton(
-                    onClick = { /*TODO*/ },
-                    modifier = Modifier
-                        .size(80.dp),
-                    shape = CircleShape,
-                    contentPadding = PaddingValues(0.dp),  //avoid the little icon
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colors.background,
-                        backgroundColor = MaterialTheme.colors.background
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.WaterDrop,
-                        contentDescription = "Water plant",
-                        tint = MaterialTheme.colors.secondary,
-                        modifier = Modifier.scale(2f)
-                    )
-                }
-
-
-            }
-
+            Text(
+                text = plantWithWaterPlant.plant.name,
+                style = MaterialTheme.typography.body2,
+                color = MaterialTheme.colors.primaryVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
         }
-
 
     }
 
