@@ -95,4 +95,7 @@ dependencies {
 
     //Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.18.0")
+
+    //Glide
+    implementation "com.github.skydoves:landscapist-glide:1.5.3"
 }

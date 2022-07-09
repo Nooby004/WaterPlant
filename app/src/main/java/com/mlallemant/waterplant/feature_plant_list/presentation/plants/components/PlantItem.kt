@@ -1,29 +1,29 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.plants.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mlallemant.waterplant.R
 import com.mlallemant.waterplant.feature_plant_list.domain.model.PlantWithWaterPlants
+import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun PlantItem(
     plantWithWaterPlant: PlantWithWaterPlants,
-    modifier: Modifier = Modifier,
-    onDeleteClick: () -> Unit
+    onEdit: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
@@ -31,50 +31,96 @@ fun PlantItem(
 
         Card(
             elevation = 4.dp,
-            shape = RoundedCornerShape(20.dp)
+            shape = RoundedCornerShape(20.dp),
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colors.primaryVariant)
                     .padding(16.dp)
-                    .padding(end = 32.dp)
             ) {
-                Text(
-                    text = plantWithWaterPlant.plant.name,
-                    style = MaterialTheme.typography.h6,
-                    color = MaterialTheme.colors.background,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text(
+                        text = plantWithWaterPlant.plant.name,
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.background,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    IconButton(
+                        onClick = {
+                            onEdit()
+                        },
+                    ) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = "Edit plant",
+                            tint = MaterialTheme.colors.background,
+                        )
+                    }
+                }
+
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                GlideImage(
+                    imageModel = plantWithWaterPlant.plant.picturePath,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(20.dp)),
+                    loading = {
+                        Box(modifier = Modifier.matchParentSize()) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+                    },
                 )
 
-                if (plantWithWaterPlant.waterPlants.isNotEmpty()) {
-                    Image(
-                        painter = painterResource(
-                            R.drawable.ic_launcher_foreground
-                        ),
-                        contentDescription = "Last photo of the plant"
+            }
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(0.dp, 0.dp, 0.dp, 50.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+
+                OutlinedButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .size(80.dp),
+                    shape = CircleShape,
+                    contentPadding = PaddingValues(0.dp),  //avoid the little icon
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colors.background,
+                        backgroundColor = MaterialTheme.colors.background
                     )
-                } else {
-                    Image(
-                        painter = painterResource(
-                            R.drawable.ic_launcher_foreground
-                        ),
-                        contentDescription = "Last photo of the plant"
+                ) {
+                    Icon(
+                        Icons.Default.WaterDrop,
+                        contentDescription = "Water plant",
+                        tint = MaterialTheme.colors.secondary,
+                        modifier = Modifier.scale(2f)
                     )
                 }
-            }
 
-            IconButton(
-                onClick = onDeleteClick,
-                modifier = Modifier.align(Alignment.BottomEnd)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete note"
-                )
 
             }
+
+
         }
 
 

@@ -10,8 +10,11 @@ import com.mlallemant.waterplant.feature_plant_list.domain.model.Plant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +37,9 @@ class AddEditPlantViewModel @Inject constructor(
     private val _picturePath = mutableStateOf(String())
     val picturePath: State<String> = _picturePath
 
+    private val _canDeletePlant: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val canDeletePlant = _canDeletePlant.asStateFlow()
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -53,6 +59,8 @@ class AddEditPlantViewModel @Inject constructor(
                             text = plant.plant.waterFrequency,
                             isHintVisible = false
                         )
+                        _picturePath.value = plant.plant.picturePath
+                        _canDeletePlant.value = true
                     }
 
                 }
@@ -88,6 +96,19 @@ class AddEditPlantViewModel @Inject constructor(
                 )
             }
             is AddEditPlantEvent.SavePlant -> {
+                event.picturePath?.let {
+                    it.isEmpty().not().let {
+
+                        viewModelScope.launch {
+                            if (event.picturePath != _picturePath.value && _picturePath.value.isNotEmpty()) {
+                                // Delete file
+                                File(_picturePath.value).delete()
+                            }
+                        }
+
+                        _picturePath.value = event.picturePath
+                    }
+                }
                 viewModelScope.launch {
                     try {
                         plantUseCases.addPlant(
@@ -98,7 +119,7 @@ class AddEditPlantViewModel @Inject constructor(
                                 id = currentPlantId
                             )
                         )
-                        _eventFlow.emit(UiEvent.SaveNote)
+                        _eventFlow.emit(UiEvent.SavePlant)
                     } catch (e: InvalidPlantException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
@@ -108,7 +129,26 @@ class AddEditPlantViewModel @Inject constructor(
                     }
                 }
             }
-            is AddEditPlantEvent.OpenPreview -> {
+            is AddEditPlantEvent.DeletePlant -> {
+                viewModelScope.launch {
+                    try {
+                        plantUseCases.deletePlant(
+                            Plant(
+                                name = plantName.value.text,
+                                waterFrequency = waterFrequency.value.text,
+                                picturePath = picturePath.value,
+                                id = currentPlantId
+                            )
+                        )
+                        _eventFlow.emit(UiEvent.DeletePlant)
+                    } catch (e: InvalidPlantException) {
+                        _eventFlow.emit(
+                            UiEvent.ShowSnackBar(
+                                message = e.message ?: "Could not save plant !"
+                            )
+                        )
+                    }
+                }
             }
         }
     }
@@ -116,6 +156,7 @@ class AddEditPlantViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class ShowSnackBar(val message: String) : UiEvent()
-        object SaveNote : UiEvent()
+        object SavePlant : UiEvent()
+        object DeletePlant : UiEvent()
     }
 }

@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,6 +29,18 @@ fun AddEditPlantScreen(
     val waterFrequencyState = viewModel.waterFrequency.value
     val focusManager = LocalFocusManager.current
 
+    val showDialog = remember { mutableStateOf(false) }
+
+    val newPicturePathState = navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(
+        "picturePath",
+        ""
+    )?.collectAsState()?.value
+
+    val picturePathState =
+        if (!newPicturePathState.isNullOrEmpty()) newPicturePathState else viewModel.picturePath.value
+
+    val canDeletePlantState = viewModel.canDeletePlant.collectAsState().value
+
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(key1 = true) {
@@ -39,18 +51,60 @@ fun AddEditPlantScreen(
                         message = event.message
                     )
                 }
-                is AddEditPlantViewModel.UiEvent.SaveNote -> {
+                is AddEditPlantViewModel.UiEvent.SavePlant -> {
+                    navController.navigateUp()
+                }
+                is AddEditPlantViewModel.UiEvent.DeletePlant -> {
+                    showDialog.value = false
                     navController.navigateUp()
                 }
             }
         }
     }
 
+    if (showDialog.value) {
+        AlertDialog(title = {
+            Text("Supprimer plante", style = MaterialTheme.typography.h5)
+            Spacer(modifier = Modifier.height(50.dp))
+        }, text = {
+            Text(
+                "Voulez-vous vraiment supprimer cette plante ?",
+                style = MaterialTheme.typography.body1
+            )
+
+        }, onDismissRequest = {
+            showDialog.value = false
+        },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.onEvent(AddEditPlantEvent.DeletePlant)
+                }) {
+                    Text(
+                        "Oui",
+                        color = MaterialTheme.colors.background,
+                        style = MaterialTheme.typography.button
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog.value = false }) {
+                    Text(
+                        "Non",
+                        color = MaterialTheme.colors.background,
+                        style = MaterialTheme.typography.button
+                    )
+                }
+            },
+            backgroundColor = MaterialTheme.colors.primaryVariant
+        )
+    }
+
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(AddEditPlantEvent.SavePlant)
+                    viewModel.onEvent(AddEditPlantEvent.SavePlant(picturePathState))
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -81,7 +135,7 @@ fun AddEditPlantScreen(
                 onValueChange = {
                     viewModel.onEvent(AddEditPlantEvent.EnteredName(it))
                 },
-                textStyle = MaterialTheme.typography.h5,
+                textStyle = MaterialTheme.typography.h6,
                 singleLine = true
             ) {
                 viewModel.onEvent(AddEditPlantEvent.ChangeNameFocus(it))
@@ -95,22 +149,38 @@ fun AddEditPlantScreen(
                 onValueChange = {
                     viewModel.onEvent(AddEditPlantEvent.EnteredWaterFrequency(it))
                 },
-                textStyle = MaterialTheme.typography.h5,
+                textStyle = MaterialTheme.typography.h6,
                 singleLine = true
             ) {
                 viewModel.onEvent(AddEditPlantEvent.ChangeWaterFrequencyFocus(it))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             PlantImageView(
-                onClick = {
-                    navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${viewModel.getPlantId()}")
+                picturePath = picturePathState
+            ) {
+                navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${viewModel.getPlantId()}")
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            if (canDeletePlantState) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    TextButton(onClick = {
+                        showDialog.value = true
+                    }) {
+                        Text(
+                            text = "Supprimer la plante",
+                            color = Color.Red,
+                            style = MaterialTheme.typography.h6
+                        )
+                    }
                 }
-            )
-
+            }
         }
-
-
     }
 }

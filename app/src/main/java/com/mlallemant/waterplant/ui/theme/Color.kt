@@ -10,3 +10,4 @@ val White = Color.White
 val DarkGray = Color(0xFF202020)
 val LightBlue = Color(0xFFD7E8DE)
 val PastelGreen = Color(0xFFBEE5B0)
+val WaterBlue = Color(0xFFAFEEEE)

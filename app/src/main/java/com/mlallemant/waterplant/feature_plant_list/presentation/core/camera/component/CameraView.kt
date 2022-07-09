@@ -21,7 +21,7 @@ import com.mlallemant.waterplant.R
 import com.mlallemant.waterplant.feature_plant_list.presentation.core.camera.CameraEvent
 
 @Composable
-fun CameraControls(cameraUIAction: (CameraEvent) -> Unit) {
+fun CameraControls(cameraEvent: (CameraEvent) -> Unit) {
 
     Row(
         modifier = Modifier
@@ -36,7 +36,7 @@ fun CameraControls(cameraUIAction: (CameraEvent) -> Unit) {
             Icons.Sharp.FlipCameraAndroid,
             R.string.icn_camera_view_switch_camera_content_description,
             modifier = Modifier.size(48.dp),
-            onClick = { cameraUIAction(CameraEvent.OnSwitchCameraClick) }
+            onClick = { cameraEvent(CameraEvent.OnSwitchCameraClick) }
         )
 
         CameraControl(
@@ -46,14 +46,14 @@ fun CameraControls(cameraUIAction: (CameraEvent) -> Unit) {
                 .size(48.dp)
                 .padding(1.dp)
                 .border(1.dp, Color.White, CircleShape),
-            onClick = { cameraUIAction(CameraEvent.OnCameraClick) }
+            onClick = { cameraEvent(CameraEvent.OnCameraClick) }
         )
 
         CameraControl(
             Icons.Sharp.PhotoLibrary,
             R.string.icn_camera_view_view_gallery_content_description,
             modifier = Modifier.size(48.dp),
-            onClick = { cameraUIAction(CameraEvent.OnGalleryViewClick) }
+            onClick = { cameraEvent(CameraEvent.OnGalleryViewClick) }
         )
 
     }

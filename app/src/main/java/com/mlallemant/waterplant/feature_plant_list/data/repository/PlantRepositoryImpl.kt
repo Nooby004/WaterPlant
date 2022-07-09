@@ -6,6 +6,7 @@ import com.mlallemant.waterplant.feature_plant_list.domain.model.PlantWithWaterP
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.repository.PlantRepository
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 class PlantRepositoryImpl(
     private val dao: PlantDao
@@ -28,6 +29,7 @@ class PlantRepositoryImpl(
     }
 
     override suspend fun deletePlant(plant: Plant) {
+        File(plant.picturePath).delete()
         dao.deletePlant(plant)
     }
 

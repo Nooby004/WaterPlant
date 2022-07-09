@@ -12,14 +12,17 @@ import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.skydoves.landscapist.ShimmerParams
+import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun PlantImageView(
-    picturePath: String = "",
+    picturePath: String? = "",
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
 
     Box(
@@ -33,32 +36,41 @@ fun PlantImageView(
             .clickable {
                 onClick()
             }
-
-
     ) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.AddAPhoto,
-                contentDescription = "Add plant photo",
-                tint = MaterialTheme.colors.primaryVariant,
-                modifier = Modifier.scale(2f)
+        if (picturePath.isNullOrEmpty()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddAPhoto,
+                    contentDescription = "Add plant photo",
+                    tint = MaterialTheme.colors.primaryVariant,
+                    modifier = Modifier.scale(2f)
+                )
+            }
+        } else {
+
+            GlideImage(
+                imageModel = picturePath,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RoundedCornerShape(20.dp)),
+                shimmerParams = ShimmerParams(
+                    baseColor = MaterialTheme.colors.background,
+                    highlightColor = MaterialTheme.colors.primaryVariant,
+                    durationMillis = 350,
+                    dropOff = 0.65f,
+                    tilt = 20f
+                ),
             )
 
-            /*        CameraView(onImageCaptured = { uri, fromGallery ->
-                        Log.d(TAG, "Image Uri Captured from Camera View")
-        //Todo : use the uri as needed
 
-                    }, onError = { imageCaptureException ->
-
-                    })*/
         }
-
 
     }
 }
