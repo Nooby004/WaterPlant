@@ -16,13 +16,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.mlallemant.waterplant.feature_plant_list.domain.model.PlantWithWaterPlants
+import com.mlallemant.waterplant.feature_plant_list.domain.model.Plant
 import com.skydoves.landscapist.glide.GlideImage
 
 @ExperimentalFoundationApi
 @Composable
 fun PlantItem(
-    plantWithWaterPlant: PlantWithWaterPlants,
+    plant: Plant,
     onOpenEdit: (plantId: Int?) -> Unit,
     onClick: () -> Unit,
     isSelected: Boolean = false,
@@ -42,7 +42,7 @@ fun PlantItem(
 
 
             GlideImage(
-                imageModel = plantWithWaterPlant.plant.picturePath,
+                imageModel = plant.picturePath,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(shape = CircleShape)
@@ -62,7 +62,7 @@ fun PlantItem(
                     .combinedClickable(
                         onClick = { onClick() },
                         onLongClick = {
-                            onOpenEdit(plantWithWaterPlant.plant.id)
+                            onOpenEdit(plant.id)
                         }
                     ),
                 loading = {
@@ -77,7 +77,7 @@ fun PlantItem(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = plantWithWaterPlant.plant.name,
+                text = plant.name,
                 style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.primaryVariant,
                 maxLines = 1,

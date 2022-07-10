@@ -36,11 +36,11 @@ object AppModule {
     @Singleton
     fun providePlantUseCases(repository: PlantRepository): PlantUseCases {
         return PlantUseCases(
-            getPlantsWithWaterPlants = GetPlantsWithWaterPlantsUseCase(repository),
+            getPlants = GetPlantsUseCase(repository),
             addPlant = AddPlantUseCase(repository),
             addWaterToPlant = AddWaterToPlantUseCase(repository),
             deletePlant = DeletePlantUseCase(repository),
-            getNextWateringUseCase = GetNextWateringUseCase(repository),
+            getNextWatering = GetNextWateringUseCase(repository),
             getPlantWithWaterPlants = GetPlantWithWaterPlantsUseCase(repository)
         )
     }

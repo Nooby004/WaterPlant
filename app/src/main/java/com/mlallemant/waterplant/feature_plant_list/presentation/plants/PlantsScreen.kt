@@ -42,6 +42,8 @@ fun PlantsScreen(
 ) {
 
     val state = viewModel.state.value
+    val waterPlantsState = viewModel.waterPlantsState.value
+
     val nextWateringDay = viewModel.nextWateringState.collectAsState().value
 
     val scope = rememberCoroutineScope()
@@ -66,8 +68,12 @@ fun PlantsScreen(
         }
     }
 
-    BottomSheetScaffold(
+    fun selectPlant(id: Int) {
+        lastPlantIdClicked.value = id
+        viewModel.onEvent(PlantsEvent.SelectPlant(id))
+    }
 
+    BottomSheetScaffold(
 
         floatingActionButton = {
             FloatingActionButton(
@@ -147,7 +153,6 @@ fun PlantsScreen(
 
                 item {
                     Spacer(modifier = Modifier.width(16.dp))
-
                     AddItem(
                         onAdd = {
                             navController.navigate(Screen.AddEditPlantScreen.route)
@@ -159,20 +164,22 @@ fun PlantsScreen(
                 }
 
                 items(state.plants) { plant ->
-
                     if (lastPlantIdClicked.value == -1) {
-                        lastPlantIdClicked.value = plant.plant.id!!
+                        plant.id?.let { id ->
+                            selectPlant(id)
+                        }
                     }
 
                     Spacer(modifier = Modifier.width(8.dp))
 
                     PlantItem(
-                        plantWithWaterPlant = plant,
+                        plant = plant,
                         onClick = {
-                            lastPlantIdClicked.value = plant.plant.id!!
-                            viewModel.onEvent(PlantsEvent.SelectPlant(plant.plant.id))
+                            plant.id?.let { id ->
+                                selectPlant(id)
+                            }
                         },
-                        isSelected = lastPlantIdClicked.value == plant.plant.id,
+                        isSelected = lastPlantIdClicked.value == plant.id,
                         onOpenEdit = { plantId ->
                             scope.launch {
                                 if (sheetState.isCollapsed) {
@@ -207,10 +214,7 @@ fun PlantsScreen(
 
             if (lastPlantIdClicked.value != -1) {
                 Spacer(modifier = Modifier.height(16.dp))
-                state.plants.find { it.plant.id == lastPlantIdClicked.value }?.let {
-                    WaterPlantGrid(waterPlants = it.waterPlants)
-                }
-
+                WaterPlantGrid(waterPlants = waterPlantsState.waterPlants)
             }
         }
 

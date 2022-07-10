@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlantRepository {
 
-    fun getPlantsWithWaterPlants(): Flow<List<PlantWithWaterPlants>>
+    fun getPlants(): Flow<List<Plant>>
 
     suspend fun getPlantWithWaterPlants(id: Int): PlantWithWaterPlants?
 

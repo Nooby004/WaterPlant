@@ -12,8 +12,8 @@ class PlantRepositoryImpl(
     private val dao: PlantDao
 ) : PlantRepository {
 
-    override fun getPlantsWithWaterPlants(): Flow<List<PlantWithWaterPlants>> {
-        return dao.getPlantsWithWaterPlants()
+    override fun getPlants(): Flow<List<Plant>> {
+        return dao.getPlants()
     }
 
     override suspend fun getPlantWithWaterPlants(id: Int): PlantWithWaterPlants? {

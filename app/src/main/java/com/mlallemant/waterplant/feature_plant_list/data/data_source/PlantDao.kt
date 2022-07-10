@@ -12,7 +12,7 @@ interface PlantDao {
 
     @Transaction
     @Query(value = "SELECT * FROM Plant")
-    fun getPlantsWithWaterPlants(): Flow<List<PlantWithWaterPlants>>
+    fun getPlants(): Flow<List<Plant>>
 
     @Transaction
     @Query(value = "SELECT * FROM Plant where id =:id")
