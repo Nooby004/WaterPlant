@@ -5,5 +5,6 @@ data class PlantUseCases(
     val getPlantWithWaterPlants: GetPlantWithWaterPlantsUseCase,
     val addPlant: AddPlantUseCase,
     val addWaterToPlant: AddWaterToPlantUseCase,
+    val getNextWateringUseCase: GetNextWateringUseCase,
     val deletePlant: DeletePlantUseCase
 )

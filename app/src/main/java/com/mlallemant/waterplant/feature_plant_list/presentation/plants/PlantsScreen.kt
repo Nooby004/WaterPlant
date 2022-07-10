@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,6 +42,8 @@ fun PlantsScreen(
 ) {
 
     val state = viewModel.state.value
+    val nextWateringDay = viewModel.nextWateringState.collectAsState().value
+
     val scope = rememberCoroutineScope()
 
     val lastPlantIdClicked = rememberSaveable { mutableStateOf(-1) }
@@ -167,6 +170,7 @@ fun PlantsScreen(
                         plantWithWaterPlant = plant,
                         onClick = {
                             lastPlantIdClicked.value = plant.plant.id!!
+                            viewModel.onEvent(PlantsEvent.SelectPlant(plant.plant.id))
                         },
                         isSelected = lastPlantIdClicked.value == plant.plant.id,
                         onOpenEdit = { plantId ->
@@ -194,8 +198,15 @@ fun PlantsScreen(
                 }
             }
 
-            if (lastPlantIdClicked.value != -1) {
+            if (nextWateringDay != -1L) {
                 Spacer(modifier = Modifier.height(32.dp))
+                Text(
+                    text = "Prochain arrosage dans $nextWateringDay jours",
+                )
+            }
+
+            if (lastPlantIdClicked.value != -1) {
+                Spacer(modifier = Modifier.height(16.dp))
                 state.plants.find { it.plant.id == lastPlantIdClicked.value }?.let {
                     WaterPlantGrid(waterPlants = it.waterPlants)
                 }

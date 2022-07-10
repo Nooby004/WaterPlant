@@ -9,6 +9,8 @@ import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -22,6 +24,10 @@ class PlantsViewModel @Inject constructor(
 
     private val _state = mutableStateOf(PlantsState())
     val state: State<PlantsState> = _state
+
+
+    private val _nextWateringState: MutableStateFlow<Long> = MutableStateFlow(-1)
+    val nextWateringState = _nextWateringState.asStateFlow()
 
     private var getPlantsJob: Job? = null
 
@@ -62,6 +68,17 @@ class PlantsViewModel @Inject constructor(
                          )*/
                     }
                 }
+            }
+            is PlantsEvent.SelectPlant -> {
+                viewModelScope.launch {
+                    plantUseCases.getNextWateringUseCase(
+                        event.plantId
+                    ).let {
+                        _nextWateringState.value = it
+                    }
+
+                }
+
             }
         }
     }
