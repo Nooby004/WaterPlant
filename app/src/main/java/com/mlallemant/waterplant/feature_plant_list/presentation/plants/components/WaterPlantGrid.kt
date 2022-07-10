@@ -9,22 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun WaterPlantGrid(
     waterPlants: List<WaterPlant>
-
-
 ) {
-
-
     LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 128.dp)
+        columns = GridCells.Fixed(3)
     ) {
-
         items(waterPlants.size) { index ->
 
             GlideImage(
@@ -39,9 +33,7 @@ fun WaterPlantGrid(
                         )
                     }
                 },
-
-                )
-
+            )
         }
     }
 

@@ -16,7 +16,7 @@ interface PlantDao {
 
     @Transaction
     @Query(value = "SELECT * FROM Plant where id =:id")
-    suspend fun getPlantById(id: Int): PlantWithWaterPlants?
+    suspend fun getPlantById(id: Int): PlantWithWaterPlants
 
     @Insert(onConflict = REPLACE)
     suspend fun addPlant(plant: Plant)

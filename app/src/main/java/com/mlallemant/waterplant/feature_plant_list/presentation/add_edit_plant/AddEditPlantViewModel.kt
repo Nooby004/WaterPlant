@@ -49,17 +49,17 @@ class AddEditPlantViewModel @Inject constructor(
         savedStateHandle.get<Int>("plantId")?.let { plantId ->
             if (plantId != -1) {
                 viewModelScope.launch {
-                    plantUseCases.getPlantWithWaterPlants(plantId)?.also { plant ->
-                        currentPlantId = plant.plant.id
+                    plantUseCases.getPlant(plantId).also { plant ->
+                        currentPlantId = plant.id
                         _plantName.value = plantName.value.copy(
-                            text = plant.plant.name,
+                            text = plant.name,
                             isHintVisible = false
                         )
                         _waterFrequency.value = waterFrequency.value.copy(
-                            text = plant.plant.waterFrequency,
+                            text = plant.waterFrequency,
                             isHintVisible = false
                         )
-                        _picturePath.value = plant.plant.picturePath
+                        _picturePath.value = plant.picturePath
                         _canDeletePlant.value = true
                     }
 

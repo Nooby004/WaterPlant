@@ -38,10 +38,11 @@ object AppModule {
         return PlantUseCases(
             getPlants = GetPlantsUseCase(repository),
             addPlant = AddPlantUseCase(repository),
+            getPlant = GetPlantUseCase(repository),
             addWaterToPlant = AddWaterToPlantUseCase(repository),
             deletePlant = DeletePlantUseCase(repository),
             getNextWatering = GetNextWateringUseCase(repository),
-            getPlantWithWaterPlants = GetPlantWithWaterPlantsUseCase(repository)
+            getWaterPlants = GetWaterPlantsUseCase(repository)
         )
     }
 }

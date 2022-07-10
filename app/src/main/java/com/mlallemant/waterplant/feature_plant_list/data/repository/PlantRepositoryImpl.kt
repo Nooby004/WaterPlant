@@ -16,7 +16,7 @@ class PlantRepositoryImpl(
         return dao.getPlants()
     }
 
-    override suspend fun getPlantWithWaterPlants(id: Int): PlantWithWaterPlants? {
+    override suspend fun getPlantWithWaterPlants(id: Int): PlantWithWaterPlants {
         return dao.getPlantById(id)
     }
 

@@ -57,6 +57,8 @@ class PlantsViewModel @Inject constructor(
 
                 viewModelScope.launch {
                     try {
+
+                        // Add water to plant
                         plantUseCases.addWaterToPlant(
                             waterPlant = WaterPlant(
                                 picturePath = event.picturePath,
@@ -65,11 +67,20 @@ class PlantsViewModel @Inject constructor(
                             )
                         )
 
-
+                        // Retrieve next watering
                         plantUseCases.getNextWatering(
                             event.plantId
                         ).let {
                             _nextWateringState.value = it
+                        }
+
+                        // Retrieve water plant list
+                        plantUseCases.getWaterPlants(
+                            event.plantId
+                        ).let {
+                            _waterPlantsState.value = waterPlantsState.value.copy(
+                                waterPlants = it
+                            )
                         }
 
                     } catch (e: InvalidPlantException) {
@@ -79,18 +90,17 @@ class PlantsViewModel @Inject constructor(
             }
             is PlantsEvent.SelectPlant -> {
                 viewModelScope.launch {
-                    plantUseCases.getPlantWithWaterPlants(
+
+                    // Retrieve water plant list
+                    plantUseCases.getWaterPlants(
                         event.plantId
                     ).let {
-                        it?.let {
-                            _waterPlantsState.value = waterPlantsState.value.copy(
-                                waterPlants = it.waterPlants
-                            )
-                        }
+                        _waterPlantsState.value = waterPlantsState.value.copy(
+                            waterPlants = it
+                        )
                     }
-                }
 
-                viewModelScope.launch {
+                    // Retrieve next watering
                     plantUseCases.getNextWatering(
                         event.plantId
                     ).let {
