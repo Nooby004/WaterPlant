@@ -8,7 +8,7 @@ data class PlantWithWaterPlants(
     @Embedded val plant: Plant,
     @Relation(
         parentColumn = "id",
-        entityColumn = "id"
+        entityColumn = "plantId"
     )
     val waterPlants: List<WaterPlant>
 )

@@ -21,15 +21,17 @@ interface PlantDao {
     @Insert(onConflict = REPLACE)
     suspend fun addPlant(plant: Plant)
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun addWaterPlant(waterPlant: WaterPlant)
-
-    @Transaction
-    suspend fun addWaterPlantToPlant(id: Int, waterPlant: WaterPlant) {
-        getPlantById(id)?.let { addPlant(it.plant) }
-        addWaterPlant(waterPlant)
-    }
 
     @Delete
     suspend fun deletePlant(plant: Plant)
+
+    @Transaction
+    @Query(value = "SELECT picturePath FROM WaterPlant WHERE plantId =:plantId")
+    suspend fun getAllWaterPlantPathPicture(plantId: Int): List<String>
+
+    @Transaction
+    @Query(value = "DELETE FROM WaterPlant WHERE plantId =:plantId")
+    suspend fun deleteAllWaterPlant(plantId: Int)
 }

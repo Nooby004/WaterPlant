@@ -24,11 +24,19 @@ class PlantRepositoryImpl(
         dao.addPlant(plant)
     }
 
-    override suspend fun addWaterPlantToPlant(plantId: Int, waterPlant: WaterPlant) {
-        dao.addWaterPlantToPlant(plantId, waterPlant)
+    override suspend fun addWaterPlant(waterPlant: WaterPlant) {
+        dao.addWaterPlant(waterPlant)
     }
 
     override suspend fun deletePlant(plant: Plant) {
+        plant.id?.let {
+            val picturePathList = dao.getAllWaterPlantPathPicture(it)
+            picturePathList.forEach { picturePath ->
+                File(picturePath).delete()
+            }
+
+            dao.deleteAllWaterPlant(plantId = it)
+        }
         File(plant.picturePath).delete()
         dao.deletePlant(plant)
     }

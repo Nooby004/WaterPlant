@@ -39,8 +39,7 @@ fun TakePhotoScreen(
     val scope = rememberCoroutineScope()
 
     val context = LocalContext.current
-
-    val cameraPermissionState = viewModel.performCameraEvent.collectAsState().value
+    
     val shouldShowPhotoState = viewModel.shouldShowPhoto.collectAsState().value
     val photoPathState = viewModel.photoPath.collectAsState().value
 
@@ -111,7 +110,6 @@ fun TakePhotoScreen(
                             navController.previousBackStackEntry
                                 ?.savedStateHandle
                                 ?.set("picturePath", photoPathState)
-
                             navController.popBackStack()
                         },
                         modifier = Modifier.size(55.dp),  //avoid the oval shape
@@ -142,7 +140,7 @@ fun TakePhotoScreen(
                     viewModel.onEvent(it)
                 }
 
-            }, onError = { imageCaptureException ->
+            }, onError = {
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar("An error occurred while trying to take a picture")
                 }

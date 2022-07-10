@@ -22,8 +22,7 @@ class TakePhotoViewModel : ViewModel() {
     fun setPerformCameraEvent(request: Boolean) {
         _performCameraEvent.value = request
     }
-
-
+    
     fun onEvent(event: TakePhotoEvent) {
         when (event) {
             is TakePhotoEvent.ShowPhoto -> {
@@ -42,7 +41,6 @@ class TakePhotoViewModel : ViewModel() {
                         Log.e("TakePhotoViewModel", "can't delete picture")
                     }
                 }
-                
             }
 
         }

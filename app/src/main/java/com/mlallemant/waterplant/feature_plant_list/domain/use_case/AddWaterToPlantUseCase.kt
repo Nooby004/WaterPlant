@@ -9,10 +9,10 @@ class AddWaterToPlantUseCase(
 ) {
 
     @Throws(InvalidPlantException::class)
-    suspend operator fun invoke(plantId: Int, waterPlant: WaterPlant) {
-        if (plantId == -1) {
+    suspend operator fun invoke(waterPlant: WaterPlant) {
+        if (waterPlant.plantId == -1) {
             throw InvalidPlantException("The id of the plant can't be null.")
         }
-        repository.addWaterPlantToPlant(plantId, waterPlant)
+        repository.addWaterPlant(waterPlant)
     }
 }

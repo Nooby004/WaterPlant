@@ -15,17 +15,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mlallemant.waterplant.feature_plant_list.presentation.core.navcontroller.extension.GetOnceResult
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.AddItem
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.PlantItem
+import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.WaterPlantGrid
 import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
 import kotlinx.coroutines.launch
 
@@ -40,7 +43,7 @@ fun PlantsScreen(
     val state = viewModel.state.value
     val scope = rememberCoroutineScope()
 
-    val lastPlantIdClicked = remember { mutableStateOf(-1) }
+    val lastPlantIdClicked = rememberSaveable { mutableStateOf(-1) }
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
@@ -49,7 +52,44 @@ fun PlantsScreen(
         bottomSheetState = sheetState
     )
 
+    navController.GetOnceResult<String>("picturePath") {
+        if (it.isNotEmpty()) {
+            viewModel.onEvent(
+                PlantsEvent.AddWaterToPlant(
+                    lastPlantIdClicked.value,
+                    it
+                )
+            )
+        }
+    }
+
     BottomSheetScaffold(
+
+
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${lastPlantIdClicked.value}")
+                },
+                backgroundColor = MaterialTheme.colors.primary,
+                modifier = Modifier.run {
+                    if (state.plants.isEmpty()) {
+                        size(0.dp)
+                    } else this
+                }
+            ) {
+                Box(modifier = Modifier) {
+
+                    Icon(
+                        Icons.Default.WaterDrop,
+                        contentDescription = "Water plant",
+                        tint = MaterialTheme.colors.background,
+                        modifier = Modifier.scale(1f)
+                    )
+                }
+            }
+
+        },
         scaffoldState = scaffoldState,
         sheetContent = {
 
@@ -73,10 +113,10 @@ fun PlantsScreen(
                         color = MaterialTheme.colors.background,
                         modifier = Modifier
                             .clickable {
-                                navController.navigate(Screen.AddEditPlantScreen.route + "?plantId=${lastPlantIdClicked.value}")
                                 scope.launch {
                                     sheetState.collapse()
                                 }
+                                navController.navigate(Screen.AddEditPlantScreen.route + "?plantId=${lastPlantIdClicked.value}")
                             }
                             .padding(8.dp)
                     )
@@ -91,8 +131,7 @@ fun PlantsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
-            Arrangement.SpaceAround
+                .padding(it)
         ) {
 
             Text(
@@ -102,24 +141,26 @@ fun PlantsScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             LazyRow(modifier = Modifier.fillMaxWidth()) {
+
+                item {
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    AddItem(
+                        onAdd = {
+                            navController.navigate(Screen.AddEditPlantScreen.route)
+                        },
+                        modifier = Modifier
+                            .width(80.dp)
+                            .height(100.dp)
+                    )
+                }
+
                 items(state.plants) { plant ->
 
-                    if (plant == state.plants.first()) {
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        AddItem(
-                            onAdd = {
-                                navController.navigate(Screen.AddEditPlantScreen.route)
-                            },
-                            modifier = Modifier
-                                .width(80.dp)
-                                .height(100.dp)
-                        )
-
-                        if (lastPlantIdClicked.value == -1) {
-                            lastPlantIdClicked.value = plant.plant.id!!
-                        }
+                    if (lastPlantIdClicked.value == -1) {
+                        lastPlantIdClicked.value = plant.plant.id!!
                     }
+
                     Spacer(modifier = Modifier.width(8.dp))
 
                     PlantItem(
@@ -154,51 +195,59 @@ fun PlantsScreen(
             }
 
             if (lastPlantIdClicked.value != -1) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(0.dp, 0.dp, 0.dp, 50.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom
-                ) {
+                Spacer(modifier = Modifier.height(32.dp))
+                state.plants.find { it.plant.id == lastPlantIdClicked.value }?.let {
+                    WaterPlantGrid(waterPlants = it.waterPlants)
+                }
 
-                    OutlinedButton(
-                        onClick = { viewModel.onEvent(PlantsEvent.AddWaterToPlant(lastPlantIdClicked.value)) },
-                        modifier = Modifier
-                            .size(80.dp),
-                        shape = CircleShape,
-                        contentPadding = PaddingValues(0.dp),  //avoid the little icon
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colors.background,
-                            backgroundColor = MaterialTheme.colors.background
-                        )
-                    ) {
+            }
+        }
 
-                        Box(modifier = Modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp, 0.dp, 0.dp, 50.dp)
+                .zIndex(10f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
 
-                            Icon(
-                                Icons.Default.WaterDrop,
-                                contentDescription = "Water plant",
-                                tint = MaterialTheme.colors.secondary,
-                                modifier = Modifier.scale(2f)
-                            )
+            OutlinedButton(
+                onClick = {
+                    navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${lastPlantIdClicked.value}")
+                },
+                modifier = Modifier
+                    .size(80.dp),
+                shape = CircleShape,
+                contentPadding = PaddingValues(0.dp),  //avoid the little icon
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colors.secondary,
+                    backgroundColor = MaterialTheme.colors.secondary
+                )
+            ) {
 
-                            Icon(
-                                Icons.Default.Add,
-                                contentDescription = "Water plant",
-                                tint = MaterialTheme.colors.background,
-                                modifier = Modifier.scale(0.8f)
-                            )
+                Box(modifier = Modifier) {
 
-                        }
-                    }
+                    Icon(
+                        Icons.Default.WaterDrop,
+                        contentDescription = "Water plant",
+                        tint = MaterialTheme.colors.background,
+                        modifier = Modifier.scale(2f)
+                    )
+
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = "Water plant",
+                        tint = MaterialTheme.colors.secondary,
+                        modifier = Modifier.scale(0.8f)
+                    )
 
                 }
             }
 
-
         }
     }
 }
+
 
 

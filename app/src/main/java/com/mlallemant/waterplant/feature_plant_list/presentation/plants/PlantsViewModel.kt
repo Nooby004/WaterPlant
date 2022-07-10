@@ -47,10 +47,10 @@ class PlantsViewModel @Inject constructor(
                 viewModelScope.launch {
                     try {
                         plantUseCases.addWaterToPlant(
-                            plantId = event.plantId,
                             waterPlant = WaterPlant(
-                                picturePath = "/storage/emulated/0/Android/media/com.mlallemant.waterplant/WaterPlant/2022-07-09-19-55-41-813.jpg",
-                                timestamp = Calendar.getInstance().timeInMillis
+                                picturePath = event.picturePath,
+                                timestamp = Calendar.getInstance().timeInMillis,
+                                plantId = event.plantId
                             )
                         )
                         //_eventFlow.emit(AddEditPlantViewModel.UiEvent.SavePlant)
