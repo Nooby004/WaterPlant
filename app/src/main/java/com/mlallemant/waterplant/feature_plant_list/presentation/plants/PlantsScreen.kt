@@ -22,15 +22,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.mlallemant.waterplant.R
 import com.mlallemant.waterplant.feature_plant_list.presentation.core.navcontroller.extension.GetOnceResult
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.AddItem
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.PlantItem
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.WaterPlantGrid
 import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
+import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -68,10 +72,19 @@ fun PlantsScreen(
         }
     }
 
+    fun collapseSheet() {
+        scope.launch {
+            sheetState.collapse()
+        }
+    }
+
+
     fun selectPlant(id: Int) {
         lastPlantIdClicked.value = id
         viewModel.onEvent(PlantsEvent.SelectPlant(id))
+        collapseSheet()
     }
+
 
     BottomSheetScaffold(
 
@@ -79,6 +92,7 @@ fun PlantsScreen(
             FloatingActionButton(
                 onClick = {
                     navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${lastPlantIdClicked.value}")
+                    collapseSheet()
                 },
                 backgroundColor = MaterialTheme.colors.primary,
                 modifier = Modifier.run {
@@ -122,9 +136,7 @@ fun PlantsScreen(
                         color = MaterialTheme.colors.background,
                         modifier = Modifier
                             .clickable {
-                                scope.launch {
-                                    sheetState.collapse()
-                                }
+                                collapseSheet()
                                 navController.navigate(Screen.AddEditPlantScreen.route + "?plantId=${lastPlantIdClicked.value}")
                             }
                             .padding(8.dp)
@@ -144,7 +156,7 @@ fun PlantsScreen(
         ) {
 
             Text(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(12.dp),
                 text = "Vos plantes",
                 style = MaterialTheme.typography.h6
             )
@@ -152,7 +164,7 @@ fun PlantsScreen(
             LazyRow(modifier = Modifier.fillMaxWidth()) {
 
                 item {
-                    Spacer(modifier = Modifier.width(16.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     AddItem(
                         onAdd = {
                             navController.navigate(Screen.AddEditPlantScreen.route)
@@ -199,17 +211,36 @@ fun PlantsScreen(
                     )
 
                     if (plant == state.plants.last()) {
-                        Spacer(modifier = Modifier.width(16.dp))
+                        Spacer(modifier = Modifier.width(12.dp))
                     }
 
                 }
             }
 
             if (nextWateringDay != -1L) {
-                Spacer(modifier = Modifier.height(32.dp))
-                Text(
-                    text = "Prochain arrosage dans $nextWateringDay jours",
-                )
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp, 0.dp, 0.dp, 0.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    GlideImage(
+                        imageModel = R.mipmap.watering_can,
+                        contentScale = ContentScale.Inside,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary),
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+
+                    Text(
+                        text = "Prochain arrosage dans $nextWateringDay jours",
+                        modifier = Modifier.padding(8.dp),
+                        style = MaterialTheme.typography.body2
+                    )
+                }
+
             }
 
             if (lastPlantIdClicked.value != -1) {
