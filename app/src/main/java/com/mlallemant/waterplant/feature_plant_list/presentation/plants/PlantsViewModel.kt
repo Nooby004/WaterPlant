@@ -34,6 +34,9 @@ class PlantsViewModel @Inject constructor(
     private val _nextWateringState: MutableStateFlow<Long> = MutableStateFlow(-1)
     val nextWateringState = _nextWateringState.asStateFlow()
 
+    private val _picturePathState: MutableStateFlow<String> = MutableStateFlow("")
+    val picturePathState = _picturePathState.asStateFlow()
+
     private var getPlantsJob: Job? = null
 
     init {
@@ -108,6 +111,9 @@ class PlantsViewModel @Inject constructor(
                     }
                 }
 
+            }
+            is PlantsEvent.ShowImage -> {
+                _picturePathState.value = event.picturePath
             }
         }
     }

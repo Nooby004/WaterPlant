@@ -13,10 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.WaterDrop
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +29,7 @@ import androidx.navigation.NavController
 import com.mlallemant.waterplant.R
 import com.mlallemant.waterplant.feature_plant_list.presentation.core.navcontroller.extension.GetOnceResult
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.AddItem
+import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.ImageViewer
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.PlantItem
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.WaterPlantGrid
 import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
@@ -47,12 +46,15 @@ fun PlantsScreen(
 
     val state = viewModel.state.value
     val waterPlantsState = viewModel.waterPlantsState.value
+    val picturePath = viewModel.picturePathState.collectAsState().value
 
     val nextWateringDay = viewModel.nextWateringState.collectAsState().value
 
     val scope = rememberCoroutineScope()
 
     val lastPlantIdClicked = rememberSaveable { mutableStateOf(-1) }
+
+    val showImage = remember { mutableStateOf(false) }
 
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed
@@ -104,10 +106,11 @@ fun PlantsScreen(
                 Box(modifier = Modifier) {
 
                     Icon(
-                        Icons.Default.WaterDrop,
+                        painter = painterResource(id = R.mipmap.watering_can),
                         contentDescription = "Water plant",
                         tint = MaterialTheme.colors.background,
-                        modifier = Modifier.scale(1f)
+                        modifier = Modifier
+                            .size(24.dp)
                     )
                 }
             }
@@ -245,9 +248,18 @@ fun PlantsScreen(
 
             if (lastPlantIdClicked.value != -1) {
                 Spacer(modifier = Modifier.height(16.dp))
-                WaterPlantGrid(waterPlants = waterPlantsState.waterPlants)
+                WaterPlantGrid(waterPlants = waterPlantsState.waterPlants, onItemClick = {
+                    viewModel.onEvent(PlantsEvent.ShowImage(it))
+                    showImage.value = true
+                })
             }
         }
+
+
+        ImageViewer(showDialog = showImage.value, onClose = {
+            showImage.value = false
+        }, picturePath)
+
 
         Column(
             modifier = Modifier
