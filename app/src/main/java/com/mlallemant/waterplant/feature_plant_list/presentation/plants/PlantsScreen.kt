@@ -128,9 +128,9 @@ fun PlantsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(70.dp)
+                        .height(60.dp)
                         .clip(shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                        .background(MaterialTheme.colors.primaryVariant),
+                        .background(MaterialTheme.colors.primary),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(

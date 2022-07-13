@@ -9,5 +9,6 @@ sealed class AddEditPlantEvent {
     data class ChangeWaterFrequencyFocus(val focusState: FocusState) : AddEditPlantEvent()
     data class SavePlant(val picturePath: String?) : AddEditPlantEvent()
     object DeletePlant : AddEditPlantEvent()
+    data class ShowDialog(val show: Boolean) : AddEditPlantEvent()
 
 }

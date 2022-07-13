@@ -40,6 +40,9 @@ class AddEditPlantViewModel @Inject constructor(
     private val _canDeletePlant: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val canDeletePlant = _canDeletePlant.asStateFlow()
 
+    private val _showDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val showDialog = _showDialog.asStateFlow()
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -140,6 +143,7 @@ class AddEditPlantViewModel @Inject constructor(
                                 id = currentPlantId
                             )
                         )
+                        _showDialog.value = false
                         _eventFlow.emit(UiEvent.DeletePlant)
                     } catch (e: InvalidPlantException) {
                         _eventFlow.emit(
@@ -149,6 +153,9 @@ class AddEditPlantViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+            is AddEditPlantEvent.ShowDialog -> {
+                _showDialog.value = event.show
             }
         }
     }

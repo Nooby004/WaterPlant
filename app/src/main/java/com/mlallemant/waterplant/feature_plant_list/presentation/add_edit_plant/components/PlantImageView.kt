@@ -28,7 +28,7 @@ fun PlantImageView(
     Box(
         modifier = Modifier
             .border(
-                BorderStroke(6.dp, color = MaterialTheme.colors.primaryVariant),
+                BorderStroke(3.dp, color = MaterialTheme.colors.primaryVariant),
                 shape = RoundedCornerShape(20.dp)
             )
             .fillMaxWidth()

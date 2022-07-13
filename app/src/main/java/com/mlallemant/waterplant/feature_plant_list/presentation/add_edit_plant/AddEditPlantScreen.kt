@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -16,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.components.PlantImageView
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.components.PlantTextField
+import com.mlallemant.waterplant.feature_plant_list.presentation.core.ui.components.PlantAlertDialog
 import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
@@ -29,7 +32,7 @@ fun AddEditPlantScreen(
     val waterFrequencyState = viewModel.waterFrequency.value
     val focusManager = LocalFocusManager.current
 
-    val showDialog = remember { mutableStateOf(false) }
+    val showDialog = viewModel.showDialog.collectAsState().value
 
     val newPicturePathState = navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(
         "picturePath",
@@ -55,48 +58,20 @@ fun AddEditPlantScreen(
                     navController.navigateUp()
                 }
                 is AddEditPlantViewModel.UiEvent.DeletePlant -> {
-                    showDialog.value = false
                     navController.navigateUp()
                 }
             }
         }
     }
 
-    if (showDialog.value) {
-        AlertDialog(title = {
-            Text("Supprimer plante", style = MaterialTheme.typography.h5)
-            Spacer(modifier = Modifier.height(50.dp))
-        }, text = {
-            Text(
-                "Voulez-vous vraiment supprimer cette plante ?",
-                style = MaterialTheme.typography.body1
-            )
+    if (showDialog) {
 
-        }, onDismissRequest = {
-            showDialog.value = false
-        },
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.onEvent(AddEditPlantEvent.DeletePlant)
-                }) {
-                    Text(
-                        "Oui",
-                        color = MaterialTheme.colors.background,
-                        style = MaterialTheme.typography.button
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog.value = false }) {
-                    Text(
-                        "Non",
-                        color = MaterialTheme.colors.background,
-                        style = MaterialTheme.typography.button
-                    )
-                }
-            },
-            backgroundColor = MaterialTheme.colors.primaryVariant
-        )
+        PlantAlertDialog(
+            title = "Supprimer plante",
+            content = "Voulez-vous vraiment supprimer cette plante ?",
+            onDismiss = { viewModel.onEvent(AddEditPlantEvent.ShowDialog(false)) },
+            onPositiveClick = { viewModel.onEvent(AddEditPlantEvent.DeletePlant) },
+            onNegativeClick = { viewModel.onEvent(AddEditPlantEvent.ShowDialog(false)) })
     }
 
 
@@ -135,7 +110,7 @@ fun AddEditPlantScreen(
                 onValueChange = {
                     viewModel.onEvent(AddEditPlantEvent.EnteredName(it))
                 },
-                textStyle = MaterialTheme.typography.h6,
+                textStyle = MaterialTheme.typography.body1,
                 singleLine = true
             ) {
                 viewModel.onEvent(AddEditPlantEvent.ChangeNameFocus(it))
@@ -149,7 +124,7 @@ fun AddEditPlantScreen(
                 onValueChange = {
                     viewModel.onEvent(AddEditPlantEvent.EnteredWaterFrequency(it))
                 },
-                textStyle = MaterialTheme.typography.h6,
+                textStyle = MaterialTheme.typography.body1,
                 singleLine = true
             ) {
                 viewModel.onEvent(AddEditPlantEvent.ChangeWaterFrequencyFocus(it))
@@ -171,7 +146,7 @@ fun AddEditPlantScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     TextButton(onClick = {
-                        showDialog.value = true
+                        viewModel.onEvent(AddEditPlantEvent.ShowDialog(true))
                     }) {
                         Text(
                             text = "Supprimer la plante",
