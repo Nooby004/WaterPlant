@@ -2,6 +2,7 @@ package com.mlallemant.waterplant.feature_plant_list.presentation.plants.compone
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
@@ -26,9 +27,10 @@ fun ImageViewer(
             GlideImage(imageModel = picturePath,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
+                    .fillMaxSize()
+                    .aspectRatio(0.5625f)
                     .clickable { onClose() }
-                    .fillMaxSize(),
+                    .clip(RoundedCornerShape(16.dp)),
                 loading = {
                     Box(modifier = Modifier.matchParentSize()) {
                         CircularProgressIndicator(

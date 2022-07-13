@@ -7,23 +7,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.mlallemant.waterplant.R
@@ -259,51 +253,7 @@ fun PlantsScreen(
         ImageViewer(showDialog = showImage.value, onClose = {
             showImage.value = false
         }, picturePath)
-
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(0.dp, 0.dp, 0.dp, 50.dp)
-                .zIndex(10f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
-        ) {
-
-            OutlinedButton(
-                onClick = {
-                    navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${lastPlantIdClicked.value}")
-                },
-                modifier = Modifier
-                    .size(80.dp),
-                shape = CircleShape,
-                contentPadding = PaddingValues(0.dp),  //avoid the little icon
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colors.secondary,
-                    backgroundColor = MaterialTheme.colors.secondary
-                )
-            ) {
-
-                Box(modifier = Modifier) {
-
-                    Icon(
-                        Icons.Default.WaterDrop,
-                        contentDescription = "Water plant",
-                        tint = MaterialTheme.colors.background,
-                        modifier = Modifier.scale(2f)
-                    )
-
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = "Water plant",
-                        tint = MaterialTheme.colors.secondary,
-                        modifier = Modifier.scale(0.8f)
-                    )
-
-                }
-            }
-
-        }
+        
     }
 }
 
