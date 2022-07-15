@@ -16,14 +16,20 @@ class WateringUtils {
                     // if no water plant, you should watering your plant now !
                     -1
                 } else {
-                    val lastWaterPlant =
+
+                    // Get last watering timestamp
+                    val lastWaterPlantTimestamp =
                         it.waterPlants.maxByOrNull { it1 -> it1.timestamp }?.timestamp
 
-                    val nextDay =
-                        lastWaterPlant?.plus((1000 * 60 * 60 * 24 * frequencyWatering.toLong()))
+                    // Calculate the future watering day timestamp
+                    val nextWateringDayTimestamp =
+                        lastWaterPlantTimestamp?.plus((1000 * 60 * 60 * 24 * frequencyWatering.toLong()))
 
+                    // Calculate the number of day before the next watering
+                    val numberOfDayBeforeNextWatering =
+                        nextWateringDayTimestamp?.minus(Calendar.getInstance().timeInMillis) ?: 0
                     TimeUnit.MILLISECONDS.toDays(
-                        nextDay?.minus(Calendar.getInstance().timeInMillis) ?: -1
+                        if (numberOfDayBeforeNextWatering <= 0) 0 else numberOfDayBeforeNextWatering
                     )
 
                 }

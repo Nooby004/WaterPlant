@@ -25,6 +25,7 @@ class PlantsViewModel @Inject constructor(
     private val plantUseCases: PlantUseCases
 ) : ViewModel() {
 
+
     private val _state = mutableStateOf(PlantsState())
     val state: State<PlantsState> = _state
 
@@ -36,6 +37,10 @@ class PlantsViewModel @Inject constructor(
 
     private val _picturePathState: MutableStateFlow<String> = MutableStateFlow("")
     val picturePathState = _picturePathState.asStateFlow()
+
+
+    private val _currentPlantNameState: MutableStateFlow<String> = MutableStateFlow("")
+    val currentPlantNameState = _currentPlantNameState.asStateFlow()
 
     private var getPlantsJob: Job? = null
 
@@ -90,6 +95,9 @@ class PlantsViewModel @Inject constructor(
                         Log.e("TAG", e.toString())
                     }
                 }
+
+                // Actualize plants order
+                getPlants()
             }
             is PlantsEvent.SelectPlant -> {
                 viewModelScope.launch {
@@ -109,6 +117,9 @@ class PlantsViewModel @Inject constructor(
                     ).let {
                         _nextWateringState.value = it
                     }
+
+                    _currentPlantNameState.value =
+                        _state.value.plants.first { it.id == event.plantId }.name
                 }
 
             }

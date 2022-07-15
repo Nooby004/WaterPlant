@@ -41,7 +41,7 @@ fun PlantsScreen(
     val state = viewModel.state.value
     val waterPlantsState = viewModel.waterPlantsState.value
     val picturePath = viewModel.picturePathState.collectAsState().value
-
+    val currentPlantName = viewModel.currentPlantNameState.collectAsState().value
     val nextWateringDay = viewModel.nextWateringState.collectAsState().value
 
     val scope = rememberCoroutineScope()
@@ -154,7 +154,7 @@ fun PlantsScreen(
 
             Text(
                 modifier = Modifier.padding(12.dp),
-                text = "Vos plantes",
+                text = "WaterPlant",
                 style = MaterialTheme.typography.h6
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -217,35 +217,60 @@ fun PlantsScreen(
             if (nextWateringDay != -1L) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp, 0.dp, 0.dp, 0.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    GlideImage(
-                        imageModel = R.mipmap.watering_can,
-                        contentScale = ContentScale.Inside,
-                        colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary),
-                        modifier = Modifier
-                            .size(40.dp)
-                    )
+                Column(modifier = Modifier.fillMaxWidth()) {
 
                     Text(
-                        text = "Prochain arrosage dans $nextWateringDay jours",
-                        modifier = Modifier.padding(8.dp),
-                        style = MaterialTheme.typography.body2
+                        text = currentPlantName,
+                        modifier = Modifier
+                            .padding(12.dp),
+                        style = MaterialTheme.typography.h6,
+                        color = MaterialTheme.colors.primaryVariant
                     )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp, 0.dp, 0.dp, 0.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+
+                        GlideImage(
+                            imageModel = R.mipmap.watering_can,
+                            contentScale = ContentScale.Inside,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary),
+                            modifier = Modifier
+                                .size(40.dp)
+                        )
+
+                        Text(
+                            text = when (nextWateringDay) {
+                                0L -> "Veuillez arroser la plante aujourd'hui !"
+                                1L -> "Prochain arrosage dans $nextWateringDay jour"
+                                else -> "Prochain arrosage dans $nextWateringDay jours"
+                            },
+                            modifier = Modifier
+                                .padding(8.dp),
+                            style = MaterialTheme.typography.body2,
+                            color = when (nextWateringDay) {
+                                0L -> MaterialTheme.colors.secondary
+                                else -> MaterialTheme.colors.primary
+                            }
+                        )
+                    }
                 }
+
 
             }
 
             if (lastPlantIdClicked.value != -1) {
                 Spacer(modifier = Modifier.height(16.dp))
-                WaterPlantGrid(waterPlants = waterPlantsState.waterPlants, onItemClick = {
-                    viewModel.onEvent(PlantsEvent.ShowImage(it))
-                    showImage.value = true
-                })
+                WaterPlantGrid(
+                    waterPlants = waterPlantsState.waterPlants,
+                    onItemClick = { picturePath ->
+                        viewModel.onEvent(PlantsEvent.ShowImage(picturePath))
+                        showImage.value = true
+                    })
             }
         }
 
@@ -253,7 +278,7 @@ fun PlantsScreen(
         ImageViewer(showDialog = showImage.value, onClose = {
             showImage.value = false
         }, picturePath)
-        
+
     }
 }
 

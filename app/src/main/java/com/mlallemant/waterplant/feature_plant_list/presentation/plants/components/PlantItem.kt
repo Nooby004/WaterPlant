@@ -25,8 +25,8 @@ fun PlantItem(
     plant: Plant,
     onOpenEdit: (plantId: Int?) -> Unit,
     onClick: () -> Unit,
-    isSelected: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = false
 ) {
     Box(
         modifier = modifier
