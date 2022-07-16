@@ -5,22 +5,22 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mlallemant.waterplant.feature_authentication.domain.model.Response
+import com.mlallemant.waterplant.feature_authentication.domain.use_case.AuthUseCases
 import com.mlallemant.waterplant.feature_plant_list.domain.model.InvalidPlantException
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class PlantsViewModel @Inject constructor(
-    private val plantUseCases: PlantUseCases
+    private val plantUseCases: PlantUseCases,
+    private val authUseCases: AuthUseCases
 ) : ViewModel() {
 
     private val _state = mutableStateOf(PlantsState())
@@ -33,6 +33,9 @@ class PlantsViewModel @Inject constructor(
     val picturePathState = _picturePathState.asStateFlow()
 
     private var getPlantsJob: Job? = null
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     init {
         getPlants()
@@ -125,6 +128,21 @@ class PlantsViewModel @Inject constructor(
                 _picturePathState.value = event.picturePath
             }
         }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            authUseCases.signOut().collect {
+                if (it == Response.Success(true)) {
+                    _eventFlow.emit(UiEvent.Logout)
+                }
+            }
+
+        }
+    }
+
+    sealed class UiEvent {
+        object Logout : UiEvent()
     }
 
 }

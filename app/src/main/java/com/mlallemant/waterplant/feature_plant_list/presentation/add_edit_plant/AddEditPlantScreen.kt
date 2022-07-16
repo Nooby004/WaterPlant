@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.components.PlantImageView
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.components.PlantTextField
 import com.mlallemant.waterplant.feature_plant_list.presentation.core.ui.components.PlantAlertDialog
-import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
+import com.mlallemant.waterplant.ui.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

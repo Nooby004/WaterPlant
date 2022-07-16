@@ -2,6 +2,12 @@ package com.mlallemant.waterplant.di
 
 import android.app.Application
 import androidx.room.Room
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.mlallemant.waterplant.feature_authentication.data.repository.AuthRepositoryImpl
+import com.mlallemant.waterplant.feature_authentication.domain.repository.AuthRepository
+import com.mlallemant.waterplant.feature_authentication.domain.use_case.*
 import com.mlallemant.waterplant.feature_plant_list.data.data_source.PlantDatabase
 import com.mlallemant.waterplant.feature_plant_list.data.repository.PlantRepositoryImpl
 import com.mlallemant.waterplant.feature_plant_list.domain.repository.PlantRepository
@@ -44,4 +50,25 @@ object AppModule {
             getNextWatering = GetNextWateringUseCase(repository)
         )
     }
+
+
+    @Provides
+    fun provideFirebaseAuth() = Firebase.auth
+
+    @Provides
+    fun provideAuthRepository(
+        auth: FirebaseAuth
+    ): AuthRepository = AuthRepositoryImpl(auth)
+
+    @Singleton
+    @Provides
+    fun provideUseCases(
+        repository: AuthRepository
+    ) = AuthUseCases(
+        isUserAuthenticated = IsUserAuthenticatedUseCase(repository),
+        signInWithEmailPassword = SignInWithEmailPasswordUseCase(repository),
+        signOut = SignOutUseCase(repository),
+        getAuthState = GetAuthStateUseCase(repository)
+    )
+
 }

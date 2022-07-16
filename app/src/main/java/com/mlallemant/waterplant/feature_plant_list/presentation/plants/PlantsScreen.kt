@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -26,8 +28,9 @@ import com.mlallemant.waterplant.feature_plant_list.presentation.plants.componen
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.ImageViewer
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.PlantItem
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.WaterPlantGrid
-import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
+import com.mlallemant.waterplant.ui.Screen
 import com.skydoves.landscapist.glide.GlideImage
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -79,6 +82,16 @@ fun PlantsScreen(
         collapseSheet()
     }
 
+
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is PlantsViewModel.UiEvent.Logout -> {
+                    navController.navigateUp()
+                }
+            }
+        }
+    }
 
     BottomSheetScaffold(
 
@@ -150,11 +163,28 @@ fun PlantsScreen(
                 .padding(it)
         ) {
 
-            Text(
-                modifier = Modifier.padding(12.dp),
-                text = "WaterPlant",
-                style = MaterialTheme.typography.h6
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = "WaterPlant",
+                    style = MaterialTheme.typography.h6
+                )
+
+                Icon(
+                    imageVector = Icons.Default.Logout,
+                    contentDescription = "Sign out",
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .clickable {
+                            viewModel.logout()
+                        }
+                )
+            }
+
             Spacer(modifier = Modifier.height(16.dp))
             LazyRow(modifier = Modifier.fillMaxWidth()) {
 
@@ -265,7 +295,7 @@ fun PlantsScreen(
 
             if (lastPlantIdClicked.value != -1) {
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 state.currentPlant?.waterPlants?.let { it1 ->
                     WaterPlantGrid(
                         waterPlants = it1

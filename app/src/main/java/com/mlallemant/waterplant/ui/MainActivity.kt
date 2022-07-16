@@ -1,4 +1,4 @@
-package com.mlallemant.waterplant.feature_plant_list.presentation
+package com.mlallemant.waterplant.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,10 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mlallemant.waterplant.feature_authentication.presentation.auth.AuthScreen
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.AddEditPlantScreen
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.PlantsScreen
 import com.mlallemant.waterplant.feature_plant_list.presentation.take_photo.TakePhotoScreen
-import com.mlallemant.waterplant.feature_plant_list.presentation.util.Screen
 import com.mlallemant.waterplant.ui.theme.WaterPlantTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,8 +38,13 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screen.PlantsScreen.route
+                        startDestination = Screen.AuthScreen.route
                     ) {
+
+                        composable(route = Screen.AuthScreen.route) {
+                            AuthScreen(navController = navController)
+                        }
+
                         composable(route = Screen.PlantsScreen.route) {
                             PlantsScreen(navController = navController)
                         }
