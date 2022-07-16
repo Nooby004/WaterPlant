@@ -8,8 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.mlallemant.waterplant.feature_plant_list.domain.model.InvalidPlantException
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
-import com.mlallemant.waterplant.feature_plant_list.presentation.plants.state.PlantsState
-import com.mlallemant.waterplant.feature_plant_list.presentation.plants.state.WaterPlantsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,12 +23,8 @@ class PlantsViewModel @Inject constructor(
     private val plantUseCases: PlantUseCases
 ) : ViewModel() {
 
-
     private val _state = mutableStateOf(PlantsState())
     val state: State<PlantsState> = _state
-
-    private val _waterPlantsState = mutableStateOf(WaterPlantsState())
-    val waterPlantsState: State<WaterPlantsState> = _waterPlantsState
 
     private val _nextWateringState: MutableStateFlow<Long> = MutableStateFlow(-1)
     val nextWateringState = _nextWateringState.asStateFlow()
@@ -38,25 +32,32 @@ class PlantsViewModel @Inject constructor(
     private val _picturePathState: MutableStateFlow<String> = MutableStateFlow("")
     val picturePathState = _picturePathState.asStateFlow()
 
-
-    private val _currentPlantNameState: MutableStateFlow<String> = MutableStateFlow("")
-    val currentPlantNameState = _currentPlantNameState.asStateFlow()
-
     private var getPlantsJob: Job? = null
 
     init {
         getPlants()
     }
 
-
     private fun getPlants() {
         getPlantsJob?.cancel()
         getPlantsJob = plantUseCases.getPlants()
             .onEach { plants ->
                 _state.value = state.value.copy(
-                    plants = plants
+                    plants = plants,
                 )
             }.launchIn(viewModelScope)
+    }
+
+    private fun getPlant(plantId: Int) {
+        viewModelScope.launch {
+            plantUseCases.getPlant(
+                plantId
+            ).let {
+                _state.value = state.value.copy(
+                    currentPlant = it
+                )
+            }
+        }
     }
 
     fun onEvent(event: PlantsEvent) {
@@ -83,11 +84,11 @@ class PlantsViewModel @Inject constructor(
                         }
 
                         // Retrieve water plant list
-                        plantUseCases.getWaterPlants(
+                        plantUseCases.getPlant(
                             event.plantId
                         ).let {
-                            _waterPlantsState.value = waterPlantsState.value.copy(
-                                waterPlants = it
+                            _state.value = state.value.copy(
+                                currentPlant = it
                             )
                         }
 
@@ -103,11 +104,11 @@ class PlantsViewModel @Inject constructor(
                 viewModelScope.launch {
 
                     // Retrieve water plant list
-                    plantUseCases.getWaterPlants(
+                    plantUseCases.getPlant(
                         event.plantId
                     ).let {
-                        _waterPlantsState.value = waterPlantsState.value.copy(
-                            waterPlants = it
+                        _state.value = state.value.copy(
+                            currentPlant = it
                         )
                     }
 
@@ -117,9 +118,6 @@ class PlantsViewModel @Inject constructor(
                     ).let {
                         _nextWateringState.value = it
                     }
-
-                    _currentPlantNameState.value =
-                        _state.value.plants.first { it.id == event.plantId }.name
                 }
 
             }

@@ -41,8 +41,7 @@ object AppModule {
             getPlant = GetPlantUseCase(repository),
             addWaterToPlant = AddWaterToPlantUseCase(repository),
             deletePlant = DeletePlantUseCase(repository),
-            getNextWatering = GetNextWateringUseCase(repository),
-            getWaterPlants = GetWaterPlantsUseCase(repository)
+            getNextWatering = GetNextWateringUseCase(repository)
         )
     }
 }

@@ -39,9 +39,7 @@ fun PlantsScreen(
 ) {
 
     val state = viewModel.state.value
-    val waterPlantsState = viewModel.waterPlantsState.value
     val picturePath = viewModel.picturePathState.collectAsState().value
-    val currentPlantName = viewModel.currentPlantNameState.collectAsState().value
     val nextWateringDay = viewModel.nextWateringState.collectAsState().value
 
     val scope = rememberCoroutineScope()
@@ -219,13 +217,15 @@ fun PlantsScreen(
 
                 Column(modifier = Modifier.fillMaxWidth()) {
 
-                    Text(
-                        text = currentPlantName,
-                        modifier = Modifier
-                            .padding(12.dp),
-                        style = MaterialTheme.typography.h6,
-                        color = MaterialTheme.colors.primaryVariant
-                    )
+                    state.currentPlant?.plant?.name?.let {
+                        Text(
+                            text = it,
+                            modifier = Modifier
+                                .padding(12.dp),
+                            style = MaterialTheme.typography.h6,
+                            color = MaterialTheme.colors.primaryVariant
+                        )
+                    }
 
                     Row(
                         modifier = Modifier
@@ -265,12 +265,15 @@ fun PlantsScreen(
 
             if (lastPlantIdClicked.value != -1) {
                 Spacer(modifier = Modifier.height(16.dp))
-                WaterPlantGrid(
-                    waterPlants = waterPlantsState.waterPlants,
-                    onItemClick = { picturePath ->
+                
+                state.currentPlant?.waterPlants?.let { it1 ->
+                    WaterPlantGrid(
+                        waterPlants = it1
+                    ) { picturePath ->
                         viewModel.onEvent(PlantsEvent.ShowImage(picturePath))
                         showImage.value = true
-                    })
+                    }
+                }
             }
         }
 

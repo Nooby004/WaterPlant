@@ -24,7 +24,7 @@ import java.util.*
 
 @Composable
 fun WaterPlantGrid(
-    waterPlants: List<WaterPlant>,
+    waterPlants: List<WaterPlant> = emptyList(),
     onItemClick: (String) -> Unit,
 ) {
     LazyVerticalGrid(
