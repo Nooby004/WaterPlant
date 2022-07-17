@@ -1,17 +1,18 @@
 package com.mlallemant.waterplant.feature_authentication.domain.repository
 
-import com.mlallemant.waterplant.feature_authentication.domain.model.Response
-import kotlinx.coroutines.flow.Flow
-
 interface AuthRepository {
     fun isUserAuthenticatedInFirebase(): Boolean
 
     suspend fun firebaseSignInEmailPassword(
         email: String,
-        password: String
-    ): Flow<Response<Boolean>>
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    )
 
-    suspend fun signOut(): Flow<Response<Boolean>>
+    suspend fun signOut(
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    )
 
-    fun getFirebaseAuthState(): Flow<Boolean>
 }

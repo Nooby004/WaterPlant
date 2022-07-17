@@ -4,5 +4,4 @@ data class AuthUseCases(
     val isUserAuthenticated: IsUserAuthenticatedUseCase,
     val signInWithEmailPassword: SignInWithEmailPasswordUseCase,
     val signOut: SignOutUseCase,
-    val getAuthState: GetAuthStateUseCase
 )

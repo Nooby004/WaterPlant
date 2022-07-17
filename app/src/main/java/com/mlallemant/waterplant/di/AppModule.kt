@@ -7,7 +7,10 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mlallemant.waterplant.feature_authentication.data.repository.AuthRepositoryImpl
 import com.mlallemant.waterplant.feature_authentication.domain.repository.AuthRepository
-import com.mlallemant.waterplant.feature_authentication.domain.use_case.*
+import com.mlallemant.waterplant.feature_authentication.domain.use_case.AuthUseCases
+import com.mlallemant.waterplant.feature_authentication.domain.use_case.IsUserAuthenticatedUseCase
+import com.mlallemant.waterplant.feature_authentication.domain.use_case.SignInWithEmailPasswordUseCase
+import com.mlallemant.waterplant.feature_authentication.domain.use_case.SignOutUseCase
 import com.mlallemant.waterplant.feature_plant_list.data.data_source.PlantDatabase
 import com.mlallemant.waterplant.feature_plant_list.data.repository.PlantRepositoryImpl
 import com.mlallemant.waterplant.feature_plant_list.domain.repository.PlantRepository
@@ -67,8 +70,7 @@ object AppModule {
     ) = AuthUseCases(
         isUserAuthenticated = IsUserAuthenticatedUseCase(repository),
         signInWithEmailPassword = SignInWithEmailPasswordUseCase(repository),
-        signOut = SignOutUseCase(repository),
-        getAuthState = GetAuthStateUseCase(repository)
+        signOut = SignOutUseCase(repository)
     )
 
 }

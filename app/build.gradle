@@ -97,6 +97,9 @@ dependencies {
     // Permissions
     implementation("com.google.accompanist:accompanist-permissions:0.18.0")
 
+    // Timber
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
     // Glide
     implementation "com.github.skydoves:landscapist-glide:1.5.3"
 

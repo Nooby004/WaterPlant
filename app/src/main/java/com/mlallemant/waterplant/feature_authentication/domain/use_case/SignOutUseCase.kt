@@ -6,5 +6,8 @@ class SignOutUseCase(
     private val repository: AuthRepository
 ) {
 
-    suspend operator fun invoke() = repository.signOut()
+    suspend operator fun invoke(
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ) = repository.signOut(onSuccess, onFailure)
 }

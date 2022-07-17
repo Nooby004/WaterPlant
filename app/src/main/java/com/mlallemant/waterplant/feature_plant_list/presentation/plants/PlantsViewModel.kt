@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mlallemant.waterplant.feature_authentication.domain.model.Response
 import com.mlallemant.waterplant.feature_authentication.domain.use_case.AuthUseCases
 import com.mlallemant.waterplant.feature_plant_list.domain.model.InvalidPlantException
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
@@ -132,11 +131,13 @@ class PlantsViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            authUseCases.signOut().collect {
-                if (it == Response.Success(true)) {
+            authUseCases.signOut(onSuccess = {
+                viewModelScope.launch {
                     _eventFlow.emit(UiEvent.Logout)
                 }
-            }
+            }, onFailure = {
+                /* TODO */
+            })
 
         }
     }

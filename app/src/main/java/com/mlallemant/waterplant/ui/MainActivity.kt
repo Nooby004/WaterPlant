@@ -2,6 +2,7 @@ package com.mlallemant.waterplant.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,6 +47,9 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(route = Screen.PlantsScreen.route) {
+                            BackHandler(true) {
+                                this@MainActivity.finish()
+                            }
                             PlantsScreen(navController = navController)
                         }
                         composable(
