@@ -5,5 +5,4 @@ data class AuthState(
     val email: String = "",
     val password: String = "",
     val error: String = "",
-    val userAlreadyAuthenticatedLoading: Boolean = false
 )

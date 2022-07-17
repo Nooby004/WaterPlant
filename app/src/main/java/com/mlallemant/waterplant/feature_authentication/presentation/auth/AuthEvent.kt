@@ -5,5 +5,4 @@ sealed class AuthEvent {
     object SignInWithEmailPassword : AuthEvent()
     data class EnteredEmail(val value: String) : AuthEvent()
     data class EnteredPassword(val value: String) : AuthEvent()
-
 }

@@ -55,12 +55,6 @@ fun AuthScreen(
                         }
                     }
                 }
-
-                is UiEvent.AlreadyAuthenticated -> {
-                    if (event.value) {
-                        navController.navigate(Screen.PlantsScreen.route)
-                    }
-                }
             }
         }
     }
@@ -76,149 +70,147 @@ fun AuthScreen(
                 .padding(padding)
         ) {
 
-            if (state.userAlreadyAuthenticatedLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else {
-                Column(Modifier.fillMaxSize()) {
 
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .background(color = MaterialTheme.colors.primaryVariant),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        // top green block
-                        Text(
-                            text = "Water Plant",
-                            modifier = Modifier.padding(0.dp, 60.dp),
-                            style = MaterialTheme.typography.h4,
-                            color = MaterialTheme.colors.background
-                        )
-
-                    }
-
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .background(color = MaterialTheme.colors.background),
-                        verticalArrangement = Arrangement.Bottom,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        // bottom gray block
-
-                        Row {
-                            Text(
-                                text = "Don't have an account ? ",
-                                modifier = Modifier.padding(0.dp, 80.dp),
-                                style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primary
-                            )
-
-
-                            Text(
-                                text = "Sign Up",
-                                modifier = Modifier.padding(0.dp, 80.dp),
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.body1,
-                                color = MaterialTheme.colors.primaryVariant
-                            )
-
-                        }
-
-                    }
-                }
+            Column(Modifier.fillMaxSize()) {
 
                 Column(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(50.dp, 180.dp)
-                        .clip(shape = RoundedCornerShape(30.dp))
-                        .background(color = MaterialTheme.colors.onBackground),
-                    verticalArrangement = Arrangement.SpaceEvenly,
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(color = MaterialTheme.colors.primaryVariant),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    GlideImage(
-                        imageModel = R.mipmap.ic_launcher,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth()
-                            .padding(120.dp, 0.dp)
-                            .aspectRatio(1f)
-
+                    // top green block
+                    Text(
+                        text = "Water Plant",
+                        modifier = Modifier.padding(0.dp, 60.dp),
+                        style = MaterialTheme.typography.h4,
+                        color = MaterialTheme.colors.background
                     )
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        AuthTextField(
-                            "Email",
-                            state.email,
-                            keyboardType = KeyboardType.Email,
-                            onValueChange = { viewModel.onEvent(AuthEvent.EnteredEmail(it)) }
+                }
+
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(color = MaterialTheme.colors.background),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    // bottom gray block
+
+                    Row {
+                        Text(
+                            text = "Don't have an account ? ",
+                            modifier = Modifier.padding(0.dp, 80.dp),
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primary
                         )
 
-                        Spacer(modifier = Modifier.height(16.dp))
 
-                        AuthPasswordTextField(
-                            "Password",
-                            state.password,
-                            onValueChange = { viewModel.onEvent(AuthEvent.EnteredPassword(it)) }
+                        Text(
+                            text = "Sign Up",
+                            modifier = Modifier.padding(0.dp, 80.dp),
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.body1,
+                            color = MaterialTheme.colors.primaryVariant
                         )
-
 
                     }
 
-                    Box(
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(50.dp, 180.dp)
+                    .clip(shape = RoundedCornerShape(30.dp))
+                    .background(color = MaterialTheme.colors.onBackground),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                GlideImage(
+                    imageModel = R.mipmap.ic_launcher,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(120.dp, 0.dp)
+                        .aspectRatio(1f)
+
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    AuthTextField(
+                        "Email",
+                        state.email,
+                        keyboardType = KeyboardType.Email,
+                        onValueChange = { viewModel.onEvent(AuthEvent.EnteredEmail(it)) }
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    AuthPasswordTextField(
+                        "Password",
+                        state.password,
+                        onValueChange = { viewModel.onEvent(AuthEvent.EnteredPassword(it)) }
+                    )
+
+
+                }
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .width(160.dp)
+                ) {
+
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = state.error,
+                        color = Color.Red,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    )
+
+                    Button(
                         modifier = Modifier
-                            .weight(1f)
-                            .width(160.dp)
-                    ) {
-
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(
-                            text = state.error,
-                            color = Color.Red,
-                            modifier = Modifier.align(Alignment.TopCenter)
-                        )
-
-                        Button(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .fillMaxWidth(),
-                            content = {
-                                Text(text = "Login")
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.background,
-                                contentColor = MaterialTheme.colors.primary
-                            ),
-                            onClick = {
-                                viewModel.onEvent(
-                                    AuthEvent.SignInWithEmailPassword
-                                )
-                            })
-
-                        if (isLoginLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .size(30.dp)
-                                    .padding(4.dp),
-                                color = MaterialTheme.colors.primary
+                            .align(Alignment.Center)
+                            .fillMaxWidth(),
+                        content = {
+                            Text(text = "Login")
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.background,
+                            contentColor = MaterialTheme.colors.primary
+                        ),
+                        onClick = {
+                            viewModel.onEvent(
+                                AuthEvent.SignInWithEmailPassword
                             )
-                        }
+                        })
+
+                    if (isLoginLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .size(30.dp)
+                                .padding(4.dp),
+                            color = MaterialTheme.colors.primary
+                        )
                     }
                 }
+                
             }
         }
     }

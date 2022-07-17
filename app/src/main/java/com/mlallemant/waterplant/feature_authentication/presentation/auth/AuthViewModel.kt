@@ -8,11 +8,9 @@ import com.mlallemant.waterplant.feature_authentication.domain.model.ErrorType
 import com.mlallemant.waterplant.feature_authentication.domain.model.Response
 import com.mlallemant.waterplant.feature_authentication.domain.use_case.AuthUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,34 +24,8 @@ class AuthViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    init {
-        isAuthenticated()
-    }
 
-    private fun isAuthenticated() {
-        viewModelScope.launch {
-            _state.value = state.value.copy(
-                userAlreadyAuthenticatedLoading = true
-            )
-            authUseCases.isUserAuthenticated().let {
-                if (it) {
-                    Timber.d("The user is already authenticated")
-                } else {
-                    Timber.d("The user is not already authenticated")
-                }
-
-                delay(50)
-                _eventFlow.emit(UiEvent.AlreadyAuthenticated(it))
-                _state.value = state.value.copy(
-                    isUserAuthenticated = it,
-                    userAlreadyAuthenticatedLoading = false
-                )
-            }
-        }
-    }
-
-
-    fun onSuccessLogin() {
+    private fun onSuccessLogin() {
         viewModelScope.launch {
             _eventFlow.emit(UiEvent.SignInResult(Response.Success(true)))
             _state.value = state.value.copy(
@@ -104,5 +76,4 @@ class AuthViewModel @Inject constructor(
 
 sealed class UiEvent {
     data class SignInResult(val response: Response<Boolean>) : UiEvent()
-    data class AlreadyAuthenticated(val value: Boolean) : UiEvent()
 }
