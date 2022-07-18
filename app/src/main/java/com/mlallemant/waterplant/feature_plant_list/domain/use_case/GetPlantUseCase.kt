@@ -7,6 +7,9 @@ class GetPlantUseCase(
     private val repository: PlantRepository
 ) {
     suspend operator fun invoke(id: Int): PlantWithWaterPlants {
-        return repository.getPlantWithWaterPlants(id)
+        val plantWithWaterPlant = repository.getPlantWithWaterPlants(id)
+        return plantWithWaterPlant.copy(
+            waterPlants = plantWithWaterPlant.waterPlants.sortedByDescending { it.timestamp }
+        )
     }
 }

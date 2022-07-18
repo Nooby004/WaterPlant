@@ -1,6 +1,5 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.plants
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -13,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -95,7 +95,7 @@ class PlantsViewModel @Inject constructor(
                         }
 
                     } catch (e: InvalidPlantException) {
-                        Log.e("TAG", e.toString())
+                        Timber.e(e.toString())
                     }
                 }
 
