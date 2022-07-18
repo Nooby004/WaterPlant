@@ -52,7 +52,7 @@ fun SplashScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.primaryVariant)
+                .background(MaterialTheme.colors.background)
                 .padding(0.dp)
         ) {
 

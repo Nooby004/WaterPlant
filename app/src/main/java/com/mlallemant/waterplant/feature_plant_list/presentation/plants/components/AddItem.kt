@@ -36,8 +36,8 @@ fun AddItem(
 
             Card(
                 elevation = 4.dp,
+                backgroundColor = MaterialTheme.colors.primaryVariant,
                 modifier = Modifier
-                    .background(MaterialTheme.colors.background)
                     .clickable { onAdd() }
                     .clip(shape = CircleShape)
                     .aspectRatio(1f)

@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,15 +27,19 @@ fun WaterPlantGrid(
     onItemClick: (String) -> Unit,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3)
+        columns = GridCells.Fixed(3),
     ) {
-        itemsIndexed(waterPlants) { index, waterPlant ->
+        itemsIndexed(waterPlants) { _, waterPlant ->
 
             Row(Modifier.height(IntrinsicSize.Min)) {
 
                 Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
 
-                    Box(Modifier.fillMaxSize()) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(1.dp, 1.dp)
+                    ) {
 
                         GlideImage(
                             imageModel = waterPlant.picturePath,
@@ -82,18 +85,6 @@ fun WaterPlantGrid(
 
                     }
 
-                    Divider(color = MaterialTheme.colors.background, thickness = 2.dp)
-                }
-
-                if ((index + 1) % 3 != 0) {
-                    Column() {
-                        Divider(
-                            color = MaterialTheme.colors.background,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(2.dp)
-                        )
-                    }
                 }
             }
         }
