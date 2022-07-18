@@ -87,7 +87,7 @@ fun PlantsScreen(
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is PlantsViewModel.UiEvent.Logout -> {
-                    navController.navigateUp()
+                    navController.navigate(Screen.AuthScreen.route)
                 }
             }
         }

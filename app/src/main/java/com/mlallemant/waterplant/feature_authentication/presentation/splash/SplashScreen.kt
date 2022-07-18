@@ -1,10 +1,9 @@
 package com.mlallemant.waterplant.feature_authentication.presentation.splash
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -53,17 +52,36 @@ fun SplashScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .background(MaterialTheme.colors.primaryVariant)
+                .padding(0.dp)
         ) {
+
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(150.dp)
+                    .align(Alignment.Center)
+                    .background(MaterialTheme.colors.primary)
+            )
 
             GlideImage(
                 imageModel = R.mipmap.ic_launcher,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(100.dp)
+                    .fillMaxWidth()
+                    .padding(160.dp, 0.dp)
+                    .aspectRatio(1f)
                     .align(Alignment.Center)
-                    .clip(CircleShape)
             )
+
+            /*    GlideImage(
+                    imageModel = R.mipmap.ic_launcher,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                )*/
 
 
         }

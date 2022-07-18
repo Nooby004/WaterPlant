@@ -40,7 +40,7 @@ class SplashViewModel @Inject constructor(
                     isUserAuthenticated = it,
                 )
 
-                delay(2000)
+                delay(1500)
                 _eventFlow.emit(UiEvent.UserAlreadyAuthenticated(it))
             }
         }
