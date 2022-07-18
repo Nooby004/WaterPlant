@@ -12,11 +12,11 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun isUserAuthenticatedInFirebase() = auth.currentUser != null
 
-    override suspend fun firebaseSignInEmailPassword(
+    override suspend fun signInEmailPassword(
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onFailure: (e: Exception) -> Unit
     ) {
         try {
             auth.signInWithEmailAndPassword(email, password)
@@ -24,30 +24,50 @@ class AuthRepositoryImpl @Inject constructor(
                     onSuccess()
                 }
                 .addOnFailureListener {
-                    onFailure()
+                    onFailure(it)
                 }
         } catch (e: Exception) {
-            onFailure()
+            onFailure(e)
+        }
+    }
+
+
+    override suspend fun signUpEmailPassword(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFailure: (e: Exception) -> Unit
+    ) {
+        try {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    onSuccess()
+                }
+                .addOnFailureListener {
+                    onFailure(it)
+                }
+        } catch (e: Exception) {
+            onFailure(e)
         }
     }
 
     override suspend fun signOut(
         onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onFailure: (e: Exception) -> Unit
     ) {
         try {
             val authStateListener = FirebaseAuth.AuthStateListener { auth ->
                 if (auth.currentUser == null) {
                     onSuccess()
                 } else {
-                    onFailure()
+                    onFailure(Exception("Fail to sign out"))
                 }
             }
             auth.addAuthStateListener(authStateListener)
             auth.signOut()
 
         } catch (e: Exception) {
-            onFailure()
+            onFailure(e)
         }
     }
 }

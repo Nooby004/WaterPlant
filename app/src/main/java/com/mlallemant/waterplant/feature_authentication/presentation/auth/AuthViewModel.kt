@@ -35,7 +35,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun onFailureLogin() {
+    private fun onFailureLogin(e: Exception) {
         viewModelScope.launch {
             _state.value = state.value.copy(
                 error = "Bad email/password"
@@ -54,7 +54,7 @@ class AuthViewModel @Inject constructor(
                         state.value.email,
                         state.value.password,
                         onSuccess = { onSuccessLogin() },
-                        onFailure = { onFailureLogin() }
+                        onFailure = ::onFailureLogin
                     )
                 }
             }

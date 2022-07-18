@@ -1,0 +1,93 @@
+package com.mlallemant.waterplant.feature_authentication.presentation.sign_up
+
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthBackground
+import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthPasswordTextField
+import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthTextField
+
+
+@Composable
+fun SignUpScreen(
+    navController: NavController,
+    viewModel: SignUpViewModel = hiltViewModel()
+) {
+
+/*    val state = viewModel.state.value*/
+    val scaffoldState = rememberScaffoldState()
+
+    var isSignUpLoading by remember() { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = true) {
+
+    }
+
+    Scaffold(
+        scaffoldState = scaffoldState
+    ) { padding ->
+
+        AuthBackground(
+            modifier = Modifier.padding(padding),
+            TopText = {
+                Text(
+                    text = "Water Plant",
+                    modifier = Modifier.padding(0.dp, 60.dp),
+                    style = MaterialTheme.typography.h4,
+                    color = MaterialTheme.colors.background
+                )
+            },
+            TextFields = {
+                AuthTextField(
+                    "Email",
+                    "",
+                    keyboardType = KeyboardType.Email,
+                    onValueChange = {
+                        /*    viewModel.onEvent(AuthEvent.EnteredEmail(it))*/
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                AuthTextField(
+                    "Confirm Email",
+                    "",
+                    keyboardType = KeyboardType.Email,
+                    onValueChange = {
+                        /*viewModel.onEvent(AuthEvent.EnteredEmail(it))*/
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                AuthPasswordTextField(
+                    "Password",
+                    "",
+                    onValueChange = {
+                        /* viewModel.onEvent(AuthEvent.EnteredPassword(it))*/
+                    }
+                )
+
+            },
+            buttonText = "Sign Up",
+            errorText = "",
+            isLoading = isSignUpLoading,
+            onClickButton = {
+                /* viewModel.onEvent(
+                     AuthEvent.SignUpWithEmailPassword
+                 )*/
+            },
+            BottomText = { }
+        )
+    }
+
+}

@@ -1,4 +1,4 @@
-package com.mlallemant.waterplant.feature_authentication.presentation.auth.components
+package com.mlallemant.waterplant.feature_authentication.presentation.core.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions

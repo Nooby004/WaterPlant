@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mlallemant.waterplant.feature_authentication.presentation.auth.AuthScreen
+import com.mlallemant.waterplant.feature_authentication.presentation.sign_up.SignUpScreen
 import com.mlallemant.waterplant.feature_authentication.presentation.splash.SplashScreen
 import com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.AddEditPlantScreen
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.PlantsScreen
@@ -54,6 +55,10 @@ class MainActivity : ComponentActivity() {
                                 this@MainActivity.finish()
                             }
                             AuthScreen(navController = navController)
+                        }
+
+                        composable(route = Screen.SignUpScreen.route) {
+                            SignUpScreen(navController = navController)
                         }
 
                         composable(route = Screen.PlantsScreen.route) {

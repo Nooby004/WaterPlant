@@ -9,9 +9,9 @@ class SignInWithEmailPasswordUseCase(
         email: String,
         password: String,
         onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onFailure: (e: Exception) -> Unit
     ) {
-        return repository.firebaseSignInEmailPassword(
+        return repository.signInEmailPassword(
             email, password, onSuccess,
             onFailure
         )

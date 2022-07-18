@@ -8,6 +8,6 @@ class SignOutUseCase(
 
     suspend operator fun invoke(
         onSuccess: () -> Unit,
-        onFailure: () -> Unit
+        onFailure: (e: Exception) -> Unit
     ) = repository.signOut(onSuccess, onFailure)
 }
