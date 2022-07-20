@@ -23,6 +23,7 @@ fun AuthBackground(
     errorText: String = "",
     buttonText: String,
     isLoading: Boolean,
+    isButtonEnable: Boolean = true,
     onClickButton: () -> Unit,
     BottomText: @Composable () -> Unit
 ) {
@@ -76,7 +77,7 @@ fun AuthBackground(
                 imageModel = R.mipmap.ic_launcher,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(0.8f)
                     .fillMaxWidth()
                     .padding(120.dp, 0.dp)
                     .aspectRatio(1f)
@@ -86,7 +87,7 @@ fun AuthBackground(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1.2f),
+                    .weight(1.4f),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -95,7 +96,7 @@ fun AuthBackground(
 
             Box(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(0.8f)
                     .width(160.dp)
             ) {
 
@@ -110,6 +111,7 @@ fun AuthBackground(
                     modifier = Modifier
                         .align(Alignment.Center)
                         .fillMaxWidth(),
+                    enabled = isButtonEnable,
                     content = {
                         Text(text = buttonText)
                     },
