@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mlallemant.waterplant.feature_authentication.domain.use_case.AuthUseCases
-import com.mlallemant.waterplant.feature_plant_list.domain.model.InvalidPlantException
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,7 +49,7 @@ class PlantsViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun getPlant(plantId: Int) {
+    private fun getPlant(plantId: String) {
         viewModelScope.launch {
             plantUseCases.getPlant(
                 plantId
@@ -75,7 +74,8 @@ class PlantsViewModel @Inject constructor(
                                 picturePath = event.picturePath,
                                 timestamp = Calendar.getInstance().timeInMillis,
                                 plantId = event.plantId
-                            )
+                            ),
+                            plantId = event.plantId
                         )
 
                         // Retrieve next watering
@@ -94,7 +94,7 @@ class PlantsViewModel @Inject constructor(
                             )
                         }
 
-                    } catch (e: InvalidPlantException) {
+                    } catch (e: Exception) {
                         Timber.e(e.toString())
                     }
                 }

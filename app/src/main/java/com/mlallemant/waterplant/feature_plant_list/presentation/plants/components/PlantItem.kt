@@ -23,7 +23,7 @@ import com.skydoves.landscapist.glide.GlideImage
 @Composable
 fun PlantItem(
     plant: Plant,
-    onOpenEdit: (plantId: Int?) -> Unit,
+    onOpenEdit: (plantId: String) -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false

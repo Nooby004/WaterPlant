@@ -1,18 +1,14 @@
 package com.mlallemant.waterplant.feature_plant_list.domain.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity
 data class Plant(
 
-    @PrimaryKey val id: Int? = null,
-    val name: String,
+    val id: String = "",
 
-    val waterFrequency: String,
+    val name: String = "",
 
-    val picturePath: String
+    val waterFrequency: String = "",
 
+    val picturePath: String = "",
+
+    val waterPlants: List<WaterPlant> = arrayListOf()
 )
-
-class InvalidPlantException(message: String) : Exception(message)

@@ -73,8 +73,8 @@ class MainActivity : ComponentActivity() {
                                 navArgument(
                                     name = "plantId"
                                 ) {
-                                    type = NavType.IntType
-                                    defaultValue = -1
+                                    type = NavType.StringType
+                                    defaultValue = "-1"
                                 }
 
                             )
@@ -87,8 +87,8 @@ class MainActivity : ComponentActivity() {
                                 navArgument(
                                     name = "plantId"
                                 ) {
-                                    type = NavType.IntType
-                                    defaultValue = -1
+                                    type = NavType.StringType
+                                    defaultValue = "-1"
                                 }
 
                             )

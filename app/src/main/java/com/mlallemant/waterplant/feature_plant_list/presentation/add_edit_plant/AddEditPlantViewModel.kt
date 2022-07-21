@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mlallemant.waterplant.feature_plant_list.domain.model.InvalidPlantException
 import com.mlallemant.waterplant.feature_plant_list.domain.model.Plant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,23 +46,23 @@ class AddEditPlantViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var currentPlantId: Int? = null
+    private var currentPlantId: String = "-1"
 
     init {
-        savedStateHandle.get<Int>("plantId")?.let { plantId ->
-            if (plantId != -1) {
+        savedStateHandle.get<String>("plantId")?.let { plantId ->
+            if (plantId != "-1") {
                 viewModelScope.launch {
-                    plantUseCases.getPlant(plantId).also { plantWithWaterPlant ->
-                        currentPlantId = plantWithWaterPlant.plant.id
+                    plantUseCases.getPlant(plantId).also { plant ->
+                        currentPlantId = plant.id
                         _plantName.value = plantName.value.copy(
-                            text = plantWithWaterPlant.plant.name,
+                            text = plant.name,
                             isHintVisible = false
                         )
                         _waterFrequency.value = waterFrequency.value.copy(
-                            text = plantWithWaterPlant.plant.waterFrequency,
+                            text = plant.waterFrequency,
                             isHintVisible = false
                         )
-                        _picturePath.value = plantWithWaterPlant.plant.picturePath
+                        _picturePath.value = plant.picturePath
                         _canDeletePlant.value = true
                     }
 
@@ -71,7 +71,7 @@ class AddEditPlantViewModel @Inject constructor(
         }
     }
 
-    fun getPlantId(): Int? {
+    fun getPlantId(): String {
         return currentPlantId
     }
 
@@ -119,11 +119,12 @@ class AddEditPlantViewModel @Inject constructor(
                                 name = plantName.value.text,
                                 waterFrequency = waterFrequency.value.text,
                                 picturePath = picturePath.value,
-                                id = currentPlantId
+                                id = if (currentPlantId == "-1") UUID.randomUUID()
+                                    .toString() else currentPlantId
                             )
                         )
                         _eventFlow.emit(UiEvent.SavePlant)
-                    } catch (e: InvalidPlantException) {
+                    } catch (e: Exception) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
                                 message = e.message ?: "Could not save plant !"
@@ -145,7 +146,7 @@ class AddEditPlantViewModel @Inject constructor(
                         )
                         _showDialog.value = false
                         _eventFlow.emit(UiEvent.DeletePlant)
-                    } catch (e: InvalidPlantException) {
+                    } catch (e: Exception) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
                                 message = e.message ?: "Could not save plant !"

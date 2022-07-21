@@ -47,7 +47,7 @@ fun PlantsScreen(
 
     val scope = rememberCoroutineScope()
 
-    val lastPlantIdClicked = rememberSaveable { mutableStateOf(-1) }
+    val lastPlantIdClicked = rememberSaveable { mutableStateOf("-1") }
 
     val showImage = remember { mutableStateOf(false) }
 
@@ -76,7 +76,7 @@ fun PlantsScreen(
     }
 
 
-    fun selectPlant(id: Int) {
+    fun selectPlant(id: String) {
         lastPlantIdClicked.value = id
         viewModel.onEvent(PlantsEvent.SelectPlant(id))
         collapseSheet()
@@ -201,10 +201,8 @@ fun PlantsScreen(
                 }
 
                 items(state.plants) { plant ->
-                    if (lastPlantIdClicked.value == -1) {
-                        plant.id?.let { id ->
-                            selectPlant(id)
-                        }
+                    if (lastPlantIdClicked.value == "-1") {
+                        selectPlant(plant.id)
                     }
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -225,9 +223,7 @@ fun PlantsScreen(
                                     sheetState.collapse()
                                 }
                             }
-                            if (plantId != null) {
-                                lastPlantIdClicked.value = plantId
-                            }
+                            lastPlantIdClicked.value = plantId
                         },
                         modifier = Modifier
                             .width(80.dp)
@@ -247,7 +243,7 @@ fun PlantsScreen(
 
                 Column(modifier = Modifier.fillMaxWidth()) {
 
-                    state.currentPlant?.plant?.name?.let {
+                    state.currentPlant?.name?.let { it ->
                         Text(
                             text = it,
                             modifier = Modifier
@@ -293,7 +289,7 @@ fun PlantsScreen(
 
             }
 
-            if (lastPlantIdClicked.value != -1) {
+            if (lastPlantIdClicked.value != "-1") {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 state.currentPlant?.waterPlants?.let { it1 ->

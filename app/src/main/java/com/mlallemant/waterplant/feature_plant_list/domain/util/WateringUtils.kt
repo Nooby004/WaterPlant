@@ -1,6 +1,6 @@
 package com.mlallemant.waterplant.feature_plant_list.domain.util
 
-import com.mlallemant.waterplant.feature_plant_list.domain.model.PlantWithWaterPlants
+import com.mlallemant.waterplant.feature_plant_list.domain.model.Plant
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -8,9 +8,9 @@ class WateringUtils {
 
     companion object {
 
-        fun getNextWateringDay(plantWithWaterPlants: PlantWithWaterPlants): Long {
-            plantWithWaterPlants.let {
-                val frequencyWatering = it.plant.waterFrequency
+        fun getNextWateringDay(plant: Plant): Long {
+            plant.let {
+                val frequencyWatering = it.waterFrequency
 
                 return if (it.waterPlants.isEmpty()) {
                     // if no water plant, you should watering your plant now !

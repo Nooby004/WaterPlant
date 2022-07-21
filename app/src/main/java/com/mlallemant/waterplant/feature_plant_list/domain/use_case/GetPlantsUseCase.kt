@@ -5,6 +5,7 @@ import com.mlallemant.waterplant.feature_plant_list.domain.repository.PlantRepos
 import com.mlallemant.waterplant.feature_plant_list.domain.util.WateringUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.single
 
 class GetPlantsUseCase(
     private val repository: PlantRepository
@@ -14,15 +15,13 @@ class GetPlantsUseCase(
         return repository.getPlants().map { plants ->
 
             // create map<id, wateringDay>
-            val idWateringDayMap = mutableMapOf<Int, Long>()
+            val idWateringDayMap = mutableMapOf<String, Long>()
 
             // populate the map
             plants.forEach {
-                it.id?.let { id ->
-                    val nextWateringDay =
-                        WateringUtils.getNextWateringDay(repository.getPlantWithWaterPlants(id))
-                    idWateringDayMap[id] = nextWateringDay
-                }
+                val nextWateringDay =
+                    WateringUtils.getNextWateringDay(repository.getPlant(it.id).single())
+                idWateringDayMap[it.id] = nextWateringDay
             }
 
             // retrieve sorted plant id list
