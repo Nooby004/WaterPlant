@@ -41,6 +41,8 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener {
+                    // sign out if sign up is in success
+                    auth.signOut()
                     onSuccess()
                 }
                 .addOnFailureListener {

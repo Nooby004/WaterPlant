@@ -6,9 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mlallemant.waterplant.feature_authentication.domain.extension.isEmailValid
 import com.mlallemant.waterplant.feature_authentication.domain.extension.isPasswordStrongEnough
-import com.mlallemant.waterplant.feature_authentication.domain.model.Response
 import com.mlallemant.waterplant.feature_authentication.domain.use_case.AuthUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,16 +22,33 @@ class SignUpViewModel @Inject constructor(
     private val _state = mutableStateOf(SignUpState())
     val state: State<SignUpState> = _state
 
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     private fun onSuccessSignUp() {
-        _state.value = state.value.copy(
-            loading = false
-        )
+        viewModelScope.launch {
+            _state.value = state.value.copy(
+                loading = false
+            )
+
+            _eventFlow.emit(UiEvent.SignUpSuccess)
+        }
     }
 
     private fun onFailureSignUp(e: Exception) {
-        _state.value = state.value.copy(
-            loading = false
-        )
+
+        var detailMessage = ""
+        e.message?.let {
+            detailMessage = it
+        }
+
+        viewModelScope.launch {
+            _state.value = state.value.copy(
+                loading = false,
+                error = detailMessage
+            )
+
+        }
     }
 
     private fun checkEnablingButton() {
@@ -53,11 +71,14 @@ class SignUpViewModel @Inject constructor(
                     _state.value = state.value.copy(
                         loading = true
                     )
+                    
                     authUseCases.signUpWithEmailPassword(
                         state.value.email,
                         state.value.password,
                         onSuccess = { onSuccessSignUp() },
-                        onFailure = ::onFailureSignUp
+                        onFailure = {
+                            onFailureSignUp(it)
+                        }
                     )
                 }
 
@@ -90,5 +111,5 @@ class SignUpViewModel @Inject constructor(
 
 
 sealed class UiEvent {
-    data class SignUpResult(val response: Response<Boolean>) : UiEvent()
+    object SignUpSuccess : UiEvent()
 }

@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mlallemant.waterplant.R
 import com.skydoves.landscapist.glide.GlideImage
 
@@ -97,41 +99,56 @@ fun AuthBackground(
             Box(
                 modifier = Modifier
                     .weight(0.8f)
-                    .width(160.dp)
+                    .fillMaxWidth()
             ) {
 
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = errorText,
                     color = Color.Red,
-                    modifier = Modifier.align(Alignment.TopCenter)
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(16.dp, 0.dp)
+                        .fillMaxWidth()
                 )
 
-                Button(
+
+                Box(
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .fillMaxWidth(),
-                    enabled = isButtonEnable,
-                    content = {
-                        Text(text = buttonText)
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.background,
-                        contentColor = MaterialTheme.colors.primary
-                    ),
-                    onClick = {
-                        onClickButton()
-                    })
+                        .width(160.dp)
+                ) {
 
-                if (isLoading) {
-                    CircularProgressIndicator(
+                    Button(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .size(30.dp)
-                            .padding(4.dp),
-                        color = MaterialTheme.colors.primary
-                    )
+                            .align(Alignment.Center)
+                            .fillMaxWidth(),
+                        enabled = isButtonEnable,
+                        content = {
+                            Text(text = buttonText)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.background,
+                            contentColor = MaterialTheme.colors.primary
+                        ),
+                        onClick = {
+                            onClickButton()
+                        })
+
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .size(30.dp)
+                                .padding(4.dp),
+                            color = MaterialTheme.colors.primary
+                        )
+                    }
+
                 }
+
             }
 
         }
