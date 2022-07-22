@@ -62,7 +62,7 @@ fun AuthPasswordTextField(
                 focusManager.clearFocus()
             }),
             modifier = modifier
-                .fillMaxWidth(0.7f),
+                .fillMaxWidth(0.8f),
             textStyle = TextStyle(color = MaterialTheme.colors.background),
             label = { Text(hint, color = Color.Gray) },
             visualTransformation = if (keyboardType != KeyboardType.Password || passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
@@ -85,7 +85,7 @@ fun AuthPasswordTextField(
             color = Color.Red,
             fontSize = 12.sp
         )
-        
+
 
     }
 

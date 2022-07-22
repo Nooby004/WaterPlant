@@ -32,7 +32,6 @@ class WateringUtils {
                     TimeUnit.MILLISECONDS.toDays(
                         if (numberOfDayBeforeNextWatering <= 0) 0 else numberOfDayBeforeNextWatering
                     )
-
                 }
             }
         }

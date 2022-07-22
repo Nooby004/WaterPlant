@@ -44,9 +44,11 @@ fun AuthTextField(
                 keyboardType = keyboardType
             ),
             colors = TextFieldDefaults.textFieldColors(
+                textColor = MaterialTheme.colors.background,
                 backgroundColor = Color.Transparent,
                 cursorColor = Color.Gray,
                 disabledLabelColor = Color.Transparent,
+                trailingIconColor = Color.Gray,
                 focusedIndicatorColor = Color.Gray,
                 unfocusedIndicatorColor = Color.Gray
             ),
@@ -54,7 +56,7 @@ fun AuthTextField(
                 focusManager.clearFocus()
             }),
             modifier = modifier
-                .fillMaxWidth(0.7f),
+                .fillMaxWidth(0.8f),
             textStyle = TextStyle(color = MaterialTheme.colors.background),
             label = { Text(hint, color = Color.Gray) },
         )
@@ -64,6 +66,6 @@ fun AuthTextField(
             color = Color.Red,
             fontSize = 12.sp
         )
-        
+
     }
 }

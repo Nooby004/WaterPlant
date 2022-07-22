@@ -68,7 +68,8 @@ fun AuthBackground(
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(50.dp, 180.dp)
+                .fillMaxHeight(0.7f)
+                .fillMaxWidth(0.85f)
                 .clip(shape = RoundedCornerShape(30.dp))
                 .background(color = MaterialTheme.colors.onBackground),
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -80,8 +81,7 @@ fun AuthBackground(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .weight(0.8f)
-                    .fillMaxWidth()
-                    .padding(120.dp, 0.dp)
+                    .fillMaxWidth(0.25f)
                     .aspectRatio(1f)
 
             )

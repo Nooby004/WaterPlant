@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.StorageReference
 import com.mlallemant.waterplant.feature_plant_list.domain.model.Plant
+import com.mlallemant.waterplant.feature_plant_list.domain.model.PlantException
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.repository.PlantRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -69,7 +70,7 @@ class PlantRepositoryImpl(
 
         } catch (e: Exception) {
             Timber.e(e)
-            null
+            throw PlantException("Can't get plant")
         }
     }
 
@@ -79,7 +80,6 @@ class PlantRepositoryImpl(
         var plantToSave: Plant = plant
 
         try {
-
             if (plant.picturePath.isNotEmpty()) {
                 val file = File(plant.picturePath)
 
@@ -110,6 +110,7 @@ class PlantRepositoryImpl(
 
         } catch (e: Exception) {
             Timber.e(e)
+            throw PlantException("Can't add plant")
         }
 
     }
@@ -151,6 +152,7 @@ class PlantRepositoryImpl(
 
         } catch (e: Exception) {
             Timber.e(e)
+            throw PlantException("Can't add water to plant")
         }
     }
 
@@ -170,36 +172,7 @@ class PlantRepositoryImpl(
 
         } catch (e: Exception) {
             Timber.e(e)
+            throw PlantException("Can't delete plant")
         }
     }
-
-
-    /*  override fun getPlants(): Flow<List<Plant>> {
-        return dao.getPlants()
-    }
-
-    override suspend fun getPlantWithWaterPlants(id: Int): PlantWithWaterPlants {
-        return dao.getPlantById(id)
-    }
-
-    override suspend fun addPlant(plant: Plant) {
-        dao.addPlant(plant)
-    }
-
-    override suspend fun addWaterPlant(waterPlant: WaterPlant) {
-        dao.addWaterPlant(waterPlant)
-    }
-
-    override suspend fun deletePlant(plant: Plant) {
-        plant.id?.let {
-            val picturePathList = dao.getAllWaterPlantPathPicture(it)
-            picturePathList.forEach { picturePath ->
-                File(picturePath).delete()
-            }
-
-            dao.deleteAllWaterPlant(plantId = it)
-        }
-        File(plant.picturePath).delete()
-        dao.deletePlant(plant)
-    }*/
 }

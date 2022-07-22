@@ -31,8 +31,8 @@ fun AddEditPlantScreen(
     val nameState = viewModel.plantName.value
     val waterFrequencyState = viewModel.waterFrequency.value
     val focusManager = LocalFocusManager.current
-
     val showDialog = viewModel.showDialog.collectAsState().value
+    val loading = viewModel.loading.collectAsState().value
 
     val newPicturePathState = navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(
         "picturePath",
@@ -83,11 +83,17 @@ fun AddEditPlantScreen(
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
-                Icon(
-                    imageVector = Icons.Default.Save,
-                    contentDescription = "Save plant",
-                    tint = MaterialTheme.colors.background
-                )
+
+                if (loading) {
+                    CircularProgressIndicator(color = MaterialTheme.colors.background)
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Save,
+                        contentDescription = "Save plant",
+                        tint = MaterialTheme.colors.background
+                    )
+                }
+
             }
         },
         scaffoldState = scaffoldState

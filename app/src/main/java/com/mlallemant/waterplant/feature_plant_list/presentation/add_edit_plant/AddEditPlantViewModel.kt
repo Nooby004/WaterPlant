@@ -43,6 +43,9 @@ class AddEditPlantViewModel @Inject constructor(
     private val _showDialog: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val showDialog = _showDialog.asStateFlow()
 
+    private val _loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val loading = _loading.asStateFlow()
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -100,6 +103,9 @@ class AddEditPlantViewModel @Inject constructor(
             }
             is AddEditPlantEvent.SavePlant -> {
                 viewModelScope.launch {
+
+                    _loading.value = true
+
                     event.picturePath?.let {
                         it.isEmpty().not().let {
                             if (event.picturePath != _picturePath.value && _picturePath.value.isNotEmpty()) {
@@ -122,6 +128,7 @@ class AddEditPlantViewModel @Inject constructor(
                             )
                         )
                         _eventFlow.emit(UiEvent.SavePlant)
+                        _loading.value = true
                     } catch (e: Exception) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
