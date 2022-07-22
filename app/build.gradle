@@ -114,4 +114,9 @@ dependencies {
 
     // Firebase Realtime Database
     implementation 'com.google.firebase:firebase-database-ktx'
+
+    // Firebase Storage
+    implementation 'com.google.firebase:firebase-storage-ktx'
+    
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
 }

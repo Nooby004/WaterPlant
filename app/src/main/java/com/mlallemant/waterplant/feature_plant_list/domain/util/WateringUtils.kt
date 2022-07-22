@@ -11,15 +11,16 @@ class WateringUtils {
         fun getNextWateringDay(plant: Plant): Long {
             plant.let {
                 val frequencyWatering = it.waterFrequency
+                val waterPlants = it.waterPlants.values
 
-                return if (it.waterPlants.isEmpty()) {
+                return if (waterPlants.isEmpty()) {
                     // if no water plant, you should watering your plant now !
                     -1
                 } else {
 
                     // Get last watering timestamp
                     val lastWaterPlantTimestamp =
-                        it.waterPlants.maxByOrNull { it1 -> it1.timestamp }?.timestamp
+                        waterPlants.maxByOrNull { it1 -> it1.timestamp }?.timestamp
 
                     // Calculate the future watering day timestamp
                     val nextWateringDayTimestamp =

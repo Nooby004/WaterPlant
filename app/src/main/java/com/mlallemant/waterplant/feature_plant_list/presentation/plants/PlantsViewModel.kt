@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mlallemant.waterplant.feature_authentication.domain.use_case.AuthUseCases
 import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCases
+import com.mlallemant.waterplant.feature_plant_list.domain.util.WateringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -49,18 +50,6 @@ class PlantsViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private fun getPlant(plantId: String) {
-        viewModelScope.launch {
-            plantUseCases.getPlant(
-                plantId
-            ).let {
-                _state.value = state.value.copy(
-                    currentPlant = it
-                )
-            }
-        }
-    }
-
     fun onEvent(event: PlantsEvent) {
         when (event) {
             is PlantsEvent.AddWaterToPlant -> {
@@ -73,52 +62,38 @@ class PlantsViewModel @Inject constructor(
                             waterPlant = WaterPlant(
                                 picturePath = event.picturePath,
                                 timestamp = Calendar.getInstance().timeInMillis,
-                                plantId = event.plantId
                             ),
                             plantId = event.plantId
                         )
 
-                        // Retrieve next watering
-                        plantUseCases.getNextWatering(
-                            event.plantId
-                        ).let {
-                            _nextWateringState.value = it
-                        }
-
-                        // Retrieve water plant list
-                        plantUseCases.getPlant(
-                            event.plantId
-                        ).let {
+                        // Select current Plant
+                        _state.value.plants.first { plant ->
+                            plant.id == event.plantId
+                        }.let {
                             _state.value = state.value.copy(
                                 currentPlant = it
                             )
+                            _nextWateringState.value = WateringUtils.getNextWateringDay(it)
                         }
 
                     } catch (e: Exception) {
                         Timber.e(e.toString())
                     }
                 }
-
                 // Actualize plants order
-                getPlants()
+                //getPlants()
             }
             is PlantsEvent.SelectPlant -> {
                 viewModelScope.launch {
 
-                    // Retrieve water plant list
-                    plantUseCases.getPlant(
-                        event.plantId
-                    ).let {
+                    // Select current Plant
+                    _state.value.plants.first { plant ->
+                        plant.id == event.plantId
+                    }.let {
                         _state.value = state.value.copy(
                             currentPlant = it
                         )
-                    }
-
-                    // Retrieve next watering
-                    plantUseCases.getNextWatering(
-                        event.plantId
-                    ).let {
-                        _nextWateringState.value = it
+                        _nextWateringState.value = WateringUtils.getNextWateringDay(it)
                     }
                 }
 

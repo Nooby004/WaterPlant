@@ -5,6 +5,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import com.mlallemant.waterplant.feature_authentication.data.repository.AuthRepositoryImpl
 import com.mlallemant.waterplant.feature_authentication.domain.repository.AuthRepository
 import com.mlallemant.waterplant.feature_authentication.domain.use_case.*
@@ -31,7 +33,6 @@ object AppModule {
             getPlant = GetPlantUseCase(repository),
             addWaterToPlant = AddWaterToPlantUseCase(repository),
             deletePlant = DeletePlantUseCase(repository),
-            getNextWatering = GetNextWateringUseCase(repository)
         )
     }
 
@@ -56,16 +57,20 @@ object AppModule {
     )
 
     @Provides
-    fun provideFirebase() =
+    fun provideFirebaseDatabase() =
         Firebase.database("https://waterplant-90f7f-default-rtdb.europe-west1.firebasedatabase.app").reference
 
 
     @Provides
     @Singleton
     fun providePlantRepository(
-        rootRef: DatabaseReference,
-        auth: FirebaseAuth
+        auth: FirebaseAuth,
+        databaseRootRef: DatabaseReference,
+        storageRootRef: StorageReference
     ): PlantRepository {
-        return PlantRepositoryImpl(rootRef, auth)
+        return PlantRepositoryImpl(auth, databaseRootRef, storageRootRef)
     }
+
+    @Provides
+    fun provideFirebaseStorage() = Firebase.storage.reference
 }

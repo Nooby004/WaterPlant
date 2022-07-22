@@ -292,9 +292,9 @@ fun PlantsScreen(
             if (lastPlantIdClicked.value != "-1") {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                state.currentPlant?.waterPlants?.let { it1 ->
+                state.currentPlant?.waterPlants?.values?.let { it1 ->
                     WaterPlantGrid(
-                        waterPlants = it1
+                        waterPlants = it1.toList()
                     ) { picturePath ->
                         viewModel.onEvent(PlantsEvent.ShowImage(picturePath))
                         showImage.value = true

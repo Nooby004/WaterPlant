@@ -99,20 +99,18 @@ class AddEditPlantViewModel @Inject constructor(
                 )
             }
             is AddEditPlantEvent.SavePlant -> {
-                event.picturePath?.let {
-                    it.isEmpty().not().let {
-
-                        viewModelScope.launch {
+                viewModelScope.launch {
+                    event.picturePath?.let {
+                        it.isEmpty().not().let {
                             if (event.picturePath != _picturePath.value && _picturePath.value.isNotEmpty()) {
                                 // Delete file
                                 File(_picturePath.value).delete()
                             }
-                        }
 
-                        _picturePath.value = event.picturePath
+                            _picturePath.value = event.picturePath
+                        }
                     }
-                }
-                viewModelScope.launch {
+
                     try {
                         plantUseCases.addPlant(
                             Plant(

@@ -8,7 +8,7 @@ interface PlantRepository {
 
     fun getPlants(): Flow<List<Plant>>
 
-    suspend fun getPlant(plantId: String): Flow<Plant>
+    suspend fun getPlant(plantId: String): Plant?
 
     suspend fun addPlant(plant: Plant)
 

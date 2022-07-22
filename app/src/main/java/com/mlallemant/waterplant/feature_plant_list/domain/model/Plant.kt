@@ -10,5 +10,5 @@ data class Plant(
 
     val picturePath: String = "",
 
-    val waterPlants: List<WaterPlant> = arrayListOf()
+    val waterPlants: Map<String, WaterPlant> = hashMapOf()
 )
