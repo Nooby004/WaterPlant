@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mlallemant.waterplant.feature_authentication.domain.model.Response
 import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthBackground
 import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthPasswordTextField
@@ -34,6 +35,9 @@ fun AuthScreen(
     val scaffoldState = rememberScaffoldState()
 
     var isLoginLoading by remember() { mutableStateOf(false) }
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = MaterialTheme.colors.primaryVariant)
+    systemUiController.setNavigationBarColor(color = MaterialTheme.colors.background)
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->

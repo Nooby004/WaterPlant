@@ -70,7 +70,7 @@ fun AuthBackground(
                 .align(Alignment.Center)
                 .fillMaxHeight(0.7f)
                 .fillMaxWidth(0.85f)
-                .clip(shape = RoundedCornerShape(30.dp))
+                .clip(shape = RoundedCornerShape(20.dp))
                 .background(color = MaterialTheme.colors.onBackground),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally

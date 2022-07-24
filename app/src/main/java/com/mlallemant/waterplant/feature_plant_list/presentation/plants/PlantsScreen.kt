@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mlallemant.waterplant.R
 import com.mlallemant.waterplant.feature_plant_list.presentation.core.navcontroller.extension.GetOnceResult
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.AddItem
@@ -57,6 +58,9 @@ fun PlantsScreen(
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
     )
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(color = MaterialTheme.colors.background)
 
     navController.GetOnceResult<String>("picturePath") {
         if (it.isNotEmpty()) {
@@ -161,6 +165,7 @@ fun PlantsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
+
         ) {
 
             Row(
@@ -210,9 +215,7 @@ fun PlantsScreen(
                     PlantItem(
                         plant = plant,
                         onClick = {
-                            plant.id?.let { id ->
-                                selectPlant(id)
-                            }
+                            selectPlant(plant.id)
                         },
                         isSelected = lastPlantIdClicked.value == plant.id,
                         onOpenEdit = { plantId ->
@@ -238,66 +241,74 @@ fun PlantsScreen(
                 }
             }
 
-            if (nextWateringDay != -1L) {
-                Spacer(modifier = Modifier.height(24.dp))
 
-                Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
 
-                    state.currentPlant?.name?.let { it ->
-                        Text(
-                            text = it,
+
+                if (nextWateringDay != -1L) {
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Column(modifier = Modifier.fillMaxWidth()) {
+
+                        state.currentPlant?.name?.let { it ->
+                            Text(
+                                text = it,
+                                modifier = Modifier
+                                    .padding(12.dp),
+                                style = MaterialTheme.typography.h6,
+                                color = MaterialTheme.colors.primaryVariant
+                            )
+                        }
+
+                        Row(
                             modifier = Modifier
-                                .padding(12.dp),
-                            style = MaterialTheme.typography.h6,
-                            color = MaterialTheme.colors.primaryVariant
-                        )
+                                .fillMaxWidth()
+                                .padding(12.dp, 0.dp, 0.dp, 0.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+
+                            GlideImage(
+                                imageModel = R.mipmap.watering_can,
+                                contentScale = ContentScale.Inside,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary),
+                                modifier = Modifier
+                                    .size(40.dp)
+                            )
+
+                            Text(
+                                text = when (nextWateringDay) {
+                                    0L -> "Veuillez arroser la plante aujourd'hui !"
+                                    1L -> "Prochain arrosage dans $nextWateringDay jour"
+                                    else -> "Prochain arrosage dans $nextWateringDay jours"
+                                },
+                                modifier = Modifier
+                                    .padding(8.dp),
+                                style = MaterialTheme.typography.body2,
+                                color = when (nextWateringDay) {
+                                    0L -> MaterialTheme.colors.secondary
+                                    else -> MaterialTheme.colors.primary
+                                }
+                            )
+                        }
                     }
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp, 0.dp, 0.dp, 0.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
 
-
-                        GlideImage(
-                            imageModel = R.mipmap.watering_can,
-                            contentScale = ContentScale.Inside,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary),
-                            modifier = Modifier
-                                .size(40.dp)
-                        )
-
-                        Text(
-                            text = when (nextWateringDay) {
-                                0L -> "Veuillez arroser la plante aujourd'hui !"
-                                1L -> "Prochain arrosage dans $nextWateringDay jour"
-                                else -> "Prochain arrosage dans $nextWateringDay jours"
-                            },
-                            modifier = Modifier
-                                .padding(8.dp),
-                            style = MaterialTheme.typography.body2,
-                            color = when (nextWateringDay) {
-                                0L -> MaterialTheme.colors.secondary
-                                else -> MaterialTheme.colors.primary
-                            }
-                        )
-                    }
                 }
 
+                if (lastPlantIdClicked.value != "-1") {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            }
-
-            if (lastPlantIdClicked.value != "-1") {
-                Spacer(modifier = Modifier.height(16.dp))
-
-                state.currentPlant?.waterPlants?.values?.let { it1 ->
-                    WaterPlantGrid(
-                        waterPlants = it1.toList()
-                    ) { picturePath ->
-                        viewModel.onEvent(PlantsEvent.ShowImage(picturePath))
-                        showImage.value = true
+                    state.currentPlant?.waterPlants?.values?.let { it1 ->
+                        WaterPlantGrid(
+                            waterPlants = it1.toList()
+                        ) { picturePath ->
+                            viewModel.onEvent(PlantsEvent.ShowImage(picturePath))
+                            showImage.value = true
+                        }
                     }
                 }
             }

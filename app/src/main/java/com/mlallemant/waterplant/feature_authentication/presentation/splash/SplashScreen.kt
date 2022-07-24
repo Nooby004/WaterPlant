@@ -15,6 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mlallemant.waterplant.R
 import com.mlallemant.waterplant.ui.Screen
 import com.skydoves.landscapist.glide.GlideImage
@@ -27,8 +28,10 @@ fun SplashScreen(
     viewModel: SplashViewModel = hiltViewModel()
 ) {
 
-    val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(color = MaterialTheme.colors.background)
 
 
     LaunchedEffect(key1 = true) {

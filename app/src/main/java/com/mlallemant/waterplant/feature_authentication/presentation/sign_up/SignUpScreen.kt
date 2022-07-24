@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthBackground
 import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthPasswordTextField
 import com.mlallemant.waterplant.feature_authentication.presentation.core.components.AuthTextField
@@ -31,6 +32,10 @@ fun SignUpScreen(
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val context = LocalContext.current
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = MaterialTheme.colors.primaryVariant)
+    systemUiController.setNavigationBarColor(color = MaterialTheme.colors.background)
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
