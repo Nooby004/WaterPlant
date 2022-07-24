@@ -4,5 +4,7 @@ import com.mlallemant.waterplant.feature_plant_list.domain.model.Plant
 
 data class PlantsState(
     val plants: List<Plant> = emptyList(),
-    val currentPlant: Plant? = null
+    val currentPlant: Plant? = null,
+    val nextWateringDay: Long = -1,
+    val picturePath: String = "",
 )

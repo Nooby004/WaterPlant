@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -27,18 +30,40 @@ fun WaterPlantGrid(
     onItemClick: (String) -> Unit,
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(3),
+        columns = GridCells.Fixed(2),
     ) {
-        itemsIndexed(waterPlants) { _, waterPlant ->
+        itemsIndexed(waterPlants) { index, waterPlant ->
 
             Row(Modifier.height(IntrinsicSize.Min)) {
 
-                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                if ((index + 1) % 2 == 0) {
+                    Column() {
+                        Divider(
+                            color = MaterialTheme.colors.onBackground,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(4.dp)
+                        )
+                    }
+                }
+
+
+                Column(
+                    Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+
+                    Divider(
+                        color = MaterialTheme.colors.onBackground,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                    )
 
                     Box(
                         Modifier
                             .fillMaxSize()
-                            .padding(1.dp, 1.dp)
                     ) {
 
                         GlideImage(
@@ -46,7 +71,8 @@ fun WaterPlantGrid(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .clickable { onItemClick(waterPlant.picturePath) }
-                                .aspectRatio(1f),
+                                .aspectRatio(0.8f)
+                                .clip(RoundedCornerShape(20.dp)),
                             loading = {
                                 Box(modifier = Modifier.matchParentSize()) {
                                     CircularProgressIndicator(
@@ -61,6 +87,7 @@ fun WaterPlantGrid(
                                 .fillMaxWidth()
                                 .fillMaxHeight(0.3f)
                                 .align(Alignment.BottomCenter)
+                                .clip(RoundedCornerShape(20.dp))
                                 .background(
                                     brush = Brush.verticalGradient(
                                         colors = listOf(
@@ -82,9 +109,22 @@ fun WaterPlantGrid(
                             style = MaterialTheme.typography.body2
                         )
 
-
                     }
+                    
+                }
 
+
+
+                if ((index + 1) % 2 != 0) {
+
+                    Column() {
+                        Divider(
+                            color = MaterialTheme.colors.onBackground,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(4.dp)
+                        )
+                    }
                 }
             }
         }

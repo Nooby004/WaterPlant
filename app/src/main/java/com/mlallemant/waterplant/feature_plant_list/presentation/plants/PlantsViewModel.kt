@@ -10,7 +10,10 @@ import com.mlallemant.waterplant.feature_plant_list.domain.use_case.PlantUseCase
 import com.mlallemant.waterplant.feature_plant_list.domain.util.WateringUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -24,12 +27,6 @@ class PlantsViewModel @Inject constructor(
 
     private val _state = mutableStateOf(PlantsState())
     val state: State<PlantsState> = _state
-
-    private val _nextWateringState: MutableStateFlow<Long> = MutableStateFlow(-1)
-    val nextWateringState = _nextWateringState.asStateFlow()
-
-    private val _picturePathState: MutableStateFlow<String> = MutableStateFlow("")
-    val picturePathState = _picturePathState.asStateFlow()
 
     private var getPlantsJob: Job? = null
 
@@ -71,17 +68,15 @@ class PlantsViewModel @Inject constructor(
                             plant.id == event.plantId
                         }.let {
                             _state.value = state.value.copy(
-                                currentPlant = it
+                                currentPlant = it,
+                                nextWateringDay = WateringUtils.getNextWateringDay(it)
                             )
-                            _nextWateringState.value = WateringUtils.getNextWateringDay(it)
                         }
 
                     } catch (e: Exception) {
                         Timber.e(e.toString())
                     }
                 }
-                // Actualize plants order
-                //getPlants()
             }
             is PlantsEvent.SelectPlant -> {
                 viewModelScope.launch {
@@ -91,15 +86,17 @@ class PlantsViewModel @Inject constructor(
                         plant.id == event.plantId
                     }.let {
                         _state.value = state.value.copy(
-                            currentPlant = it
+                            currentPlant = it,
+                            nextWateringDay = WateringUtils.getNextWateringDay(it)
                         )
-                        _nextWateringState.value = WateringUtils.getNextWateringDay(it)
                     }
                 }
 
             }
             is PlantsEvent.ShowImage -> {
-                _picturePathState.value = event.picturePath
+                _state.value = state.value.copy(
+                    picturePath = event.picturePath
+                )
             }
         }
     }
