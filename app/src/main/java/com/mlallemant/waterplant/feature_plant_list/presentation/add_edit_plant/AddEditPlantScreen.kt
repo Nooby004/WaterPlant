@@ -1,5 +1,6 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -100,9 +102,10 @@ fun AddEditPlantScreen(
     ) { padding ->
         Column(
             modifier = Modifier
+                .background(MaterialTheme.colors.onBackground)
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(12.dp)
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = {
                         focusManager.clearFocus()
@@ -110,13 +113,23 @@ fun AddEditPlantScreen(
                 }
         ) {
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Information about the plant",
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.background
+            )
+
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             PlantTextField(
-                title = "Nom de la plante",
+                title = "Name",
                 text = nameState.text,
                 onValueChange = {
                     viewModel.onEvent(AddEditPlantEvent.EnteredName(it))
                 },
-                textStyle = MaterialTheme.typography.body1,
                 singleLine = true
             ) {
                 viewModel.onEvent(AddEditPlantEvent.ChangeNameFocus(it))
@@ -124,27 +137,36 @@ fun AddEditPlantScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             PlantTextField(
-                title = "Fréquence d'arrosage (j)",
+                title = "Watering frequency (d)",
                 text = waterFrequencyState.text,
                 keyboardType = KeyboardType.Number,
                 onValueChange = {
                     viewModel.onEvent(AddEditPlantEvent.EnteredWaterFrequency(it))
                 },
-                textStyle = MaterialTheme.typography.body1,
                 singleLine = true
             ) {
                 viewModel.onEvent(AddEditPlantEvent.ChangeWaterFrequencyFocus(it))
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-            PlantImageView(
-                picturePath = picturePathState
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${viewModel.getPlantId()}")
+
+                PlantImageView(
+                    picturePath = picturePathState,
+                    modifier = Modifier
+                        .fillMaxWidth(0.6f)
+                        .aspectRatio(0.625f)
+                ) {
+                    navController.navigate(Screen.TakePhotoScreen.route + "?plantId=${viewModel.getPlantId()}")
+                }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             if (canDeletePlantState) {
                 Row(
@@ -155,9 +177,9 @@ fun AddEditPlantScreen(
                         viewModel.onEvent(AddEditPlantEvent.ShowDialog(true))
                     }) {
                         Text(
-                            text = "Supprimer la plante",
+                            text = "Delete this plant",
                             color = Color.Red,
-                            style = MaterialTheme.typography.h6
+                            style = MaterialTheme.typography.body1
                         )
                     }
                 }

@@ -125,9 +125,9 @@ fun StickyPlantsHeader(
 
                         Text(
                             text = when (nextWatering) {
-                                0L -> "Veuillez arroser la plante aujourd'hui !"
-                                1L -> "Prochain arrosage dans $nextWatering jour"
-                                else -> "Prochain arrosage dans $nextWatering jours"
+                                0L -> "Please, water the plant today !"
+                                1L -> "Next watering in $nextWatering day"
+                                else -> "Next watering in $nextWatering days"
                             },
                             modifier = Modifier
                                 .padding(8.dp),
@@ -145,7 +145,7 @@ fun StickyPlantsHeader(
 
                         Row(modifier = Modifier.fillMaxWidth()) {
                             Text(
-                                text = "Watering of the plant",
+                                text = if (currentPlant.waterPlants.isEmpty()) "No watering history for" else "Watering history of",
                                 style = MaterialTheme.typography.h6,
                                 color = MaterialTheme.colors.background
                             )

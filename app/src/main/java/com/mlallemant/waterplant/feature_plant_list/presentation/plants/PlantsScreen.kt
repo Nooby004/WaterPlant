@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,7 +55,11 @@ fun PlantsScreen(
 
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = MaterialTheme.colors.primaryVariant)
-    systemUiController.setNavigationBarColor(color = MaterialTheme.colors.onBackground)
+    systemUiController.setNavigationBarColor(
+        color = MaterialTheme.colors.onBackground,
+        darkIcons = true,
+        navigationBarContrastEnforced = true
+    )
 
 
     navController.GetOnceResult<String>("picturePath") {
@@ -147,13 +152,13 @@ fun PlantsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(60.dp)
-                        .clip(shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                        .background(MaterialTheme.colors.primary),
+                        .height(50.dp)
+                        .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
+                        .background(MaterialTheme.colors.primaryVariant),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
-                        text = "Voir les informations de la plante",
+                        text = "See information about the plant",
                         style = MaterialTheme.typography.body1,
                         color = MaterialTheme.colors.background,
                         modifier = Modifier
@@ -167,7 +172,7 @@ fun PlantsScreen(
             }
 
         },
-        sheetBackgroundColor = MaterialTheme.colors.background,
+        sheetBackgroundColor = Color.Transparent,
         sheetPeekHeight = 0.dp
     ) {
 

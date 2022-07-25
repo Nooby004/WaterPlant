@@ -100,10 +100,8 @@ fun WaterPlantGrid(
                                         )
                                     )
                                 )
-
                         )
-
-
+                        
                         Text(
                             text = getDateTime(waterPlant.timestamp),
                             modifier = Modifier

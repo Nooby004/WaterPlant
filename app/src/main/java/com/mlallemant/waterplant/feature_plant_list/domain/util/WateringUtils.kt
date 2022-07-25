@@ -15,7 +15,7 @@ class WateringUtils {
 
                 return if (waterPlants.isEmpty()) {
                     // if no water plant, you should watering your plant now !
-                    -1
+                    0
                 } else {
 
                     // Get last watering timestamp

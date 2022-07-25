@@ -1,9 +1,13 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -21,18 +25,19 @@ import com.skydoves.landscapist.glide.GlideImage
 
 @Composable
 fun PlantImageView(
+    modifier: Modifier = Modifier,
     picturePath: String? = "",
     onClick: () -> Unit,
 ) {
 
     Box(
-        modifier = Modifier
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(color = MaterialTheme.colors.primary)
             .border(
-                BorderStroke(3.dp, color = MaterialTheme.colors.primaryVariant),
+                BorderStroke(2.dp, color = MaterialTheme.colors.primaryVariant),
                 shape = RoundedCornerShape(20.dp)
             )
-            .fillMaxWidth()
-            .aspectRatio(1f)
             .clickable {
                 onClick()
             }
