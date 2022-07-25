@@ -1,7 +1,9 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.plants
 
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -176,7 +178,7 @@ fun PlantsScreen(
                 Text(
                     modifier = Modifier
                         .align(Alignment.BottomCenter),
-                    text = "WaterPlant",
+                    text = "Water Plant",
                     color = MaterialTheme.colors.background,
                     style = MaterialTheme.typography.h6
                 )
@@ -205,28 +207,25 @@ fun PlantsScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+
                 Button(
                     onClick = {
                         navController.navigate(Screen.AddEditPlantScreen.route)
                     },
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
-                        .fillMaxHeight(0.11f)
-                        .padding(12.dp)
-                        .border(
-                            shape = RoundedCornerShape(20.dp),
-                            border = BorderStroke(2.dp, color = MaterialTheme.colors.background)
-                        ),
+                        .fillMaxHeight(0.1f)
+                        .padding(12.dp),
                     shape = RoundedCornerShape(20.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.onBackground,
-                        contentColor = MaterialTheme.colors.background
+                        backgroundColor = MaterialTheme.colors.primary,
+                        contentColor = MaterialTheme.colors.primaryVariant
                     )
                 ) {
                     Icon(
                         Icons.Default.Add,
                         contentDescription = "content description",
-                        tint = MaterialTheme.colors.background
+                        tint = MaterialTheme.colors.primaryVariant
                     )
                     Text(text = "Add new plant", style = MaterialTheme.typography.subtitle2)
                 }
@@ -284,25 +283,6 @@ fun PlantsScreen(
 
                         Column(modifier = Modifier.fillMaxWidth()) {
 
-                            state.currentPlant?.name?.let { it ->
-
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        text = "Information about",
-                                        style = MaterialTheme.typography.h6,
-                                        color = MaterialTheme.colors.background
-                                    )
-
-                                    Text(
-                                        text = " $it",
-                                        style = MaterialTheme.typography.h6,
-                                        color = MaterialTheme.colors.primaryVariant
-                                    )
-                                }
-
-
-                            }
-
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -327,7 +307,7 @@ fun PlantsScreen(
                                     },
                                     modifier = Modifier
                                         .padding(8.dp),
-                                    style = MaterialTheme.typography.body2,
+                                    style = MaterialTheme.typography.body1,
                                     color = when (state.nextWateringDay) {
                                         0L -> MaterialTheme.colors.secondary
                                         else -> MaterialTheme.colors.background
@@ -335,6 +315,26 @@ fun PlantsScreen(
                                 )
                             }
 
+                            state.currentPlant?.name?.let { it ->
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    Text(
+                                        text = "Watering of the plant",
+                                        style = MaterialTheme.typography.h6,
+                                        color = MaterialTheme.colors.background
+                                    )
+
+                                    Text(
+                                        text = " $it",
+                                        style = MaterialTheme.typography.h6,
+                                        color = MaterialTheme.colors.primaryVariant
+                                    )
+                                }
+
+
+                            }
 
                         }
 

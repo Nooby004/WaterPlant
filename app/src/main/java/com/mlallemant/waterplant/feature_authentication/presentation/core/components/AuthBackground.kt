@@ -2,6 +2,7 @@ package com.mlallemant.waterplant.feature_authentication.presentation.core.compo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -76,15 +77,30 @@ fun AuthBackground(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            GlideImage(
-                imageModel = R.mipmap.ic_launcher,
-                contentScale = ContentScale.Crop,
+
+            Box(
                 modifier = Modifier
+                    .fillMaxWidth(0.30f)
                     .weight(0.8f)
-                    .fillMaxWidth(0.25f)
+                    .clip(CircleShape)
+                    //.border(2.dp, color = MaterialTheme.colors.background, CircleShape)
+                    .background(color = MaterialTheme.colors.primary)
                     .aspectRatio(1f)
 
-            )
+            ) {
+
+                GlideImage(
+                    imageModel = R.mipmap.ic_launcher,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth(0.6f)
+                        .aspectRatio(1f)
+                        .align(Alignment.Center)
+
+                )
+            }
+
+
 
             Column(
                 modifier = Modifier
