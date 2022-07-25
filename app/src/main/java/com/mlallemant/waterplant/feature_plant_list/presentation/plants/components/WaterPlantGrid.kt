@@ -3,9 +3,7 @@ package com.mlallemant.waterplant.feature_plant_list.presentation.plants.compone
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
@@ -26,27 +24,33 @@ import java.util.*
 
 @Composable
 fun WaterPlantGrid(
+    stickyHeader: @Composable () -> Unit,
     waterPlants: List<WaterPlant> = emptyList(),
     onItemClick: (String) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
     ) {
+
+        header {
+            stickyHeader()
+        }
+
         itemsIndexed(waterPlants) { index, waterPlant ->
 
-            Row(Modifier.height(IntrinsicSize.Min)) {
+            Row(
+                Modifier
+                    .height(IntrinsicSize.Min)
+            ) {
 
-                if ((index + 1) % 2 == 0) {
-                    Column() {
-                        Divider(
-                            color = MaterialTheme.colors.onBackground,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(4.dp)
-                        )
-                    }
+                Column() {
+                    Divider(
+                        color = MaterialTheme.colors.onBackground,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(if ((index + 1) % 2 == 0) 4.dp else 12.dp)
+                    )
                 }
-
 
                 Column(
                     Modifier.weight(1f),
@@ -110,21 +114,17 @@ fun WaterPlantGrid(
                         )
 
                     }
-                    
+
                 }
 
 
-
-                if ((index + 1) % 2 != 0) {
-
-                    Column() {
-                        Divider(
-                            color = MaterialTheme.colors.onBackground,
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .width(4.dp)
-                        )
-                    }
+                Column() {
+                    Divider(
+                        color = MaterialTheme.colors.onBackground,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(if ((index + 1) % 2 != 0) 4.dp else 12.dp)
+                    )
                 }
             }
         }
@@ -132,6 +132,13 @@ fun WaterPlantGrid(
 
 
 }
+
+fun LazyGridScope.header(
+    content: @Composable LazyGridItemScope.() -> Unit
+) {
+    item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
+}
+
 
 private fun getDateTime(timestamp: Long): String {
     return try {

@@ -5,32 +5,27 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.mlallemant.waterplant.R
+import com.mlallemant.waterplant.feature_plant_list.domain.model.WaterPlant
 import com.mlallemant.waterplant.feature_plant_list.presentation.core.navcontroller.extension.GetOnceResult
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.ImageViewer
-import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.PlantItem
+import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.StickyPlantsHeader
 import com.mlallemant.waterplant.feature_plant_list.presentation.plants.components.WaterPlantGrid
 import com.mlallemant.waterplant.ui.Screen
-import com.skydoves.landscapist.glide.GlideImage
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -86,6 +81,21 @@ fun PlantsScreen(
         collapseSheet()
     }
 
+    fun editPlant(plantId: String) {
+        scope.launch {
+            if (sheetState.isCollapsed) {
+                sheetState.expand()
+            } else {
+                sheetState.collapse()
+            }
+        }
+        lastPlantIdClicked.value = plantId
+    }
+
+
+    fun addNewPlant() {
+        navController.navigate(Screen.AddEditPlantScreen.route)
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
@@ -177,7 +187,7 @@ fun PlantsScreen(
 
                 Text(
                     modifier = Modifier
-                        .align(Alignment.BottomCenter),
+                        .align(Alignment.Center),
                     text = "Water Plant",
                     color = MaterialTheme.colors.background,
                     style = MaterialTheme.typography.h6
@@ -205,158 +215,31 @@ fun PlantsScreen(
             )
             {
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.AddEditPlantScreen.route)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .fillMaxHeight(0.1f)
-                        .padding(12.dp),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = MaterialTheme.colors.primary,
-                        contentColor = MaterialTheme.colors.primaryVariant
-                    )
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = "content description",
-                        tint = MaterialTheme.colors.primaryVariant
-                    )
-                    Text(text = "Add new plant", style = MaterialTheme.typography.subtitle2)
+                var waterPlants = emptyList<WaterPlant>()
+                state.currentPlant?.waterPlants?.values?.let { waterPlantList ->
+                    waterPlants =
+                        waterPlantList.toList()
                 }
 
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(0.dp, 12.dp, 0.dp, 0.dp)
-                ) {
-
-                    items(state.plants) { plant ->
-                        if (lastPlantIdClicked.value == "-1") {
-                            selectPlant(plant.id)
-                        }
-
-                        Spacer(modifier = Modifier.width(12.dp))
-
-                        PlantItem(
-                            plant = plant,
-                            onClick = {
-                                selectPlant(plant.id)
-                            },
-                            isSelected = lastPlantIdClicked.value == plant.id,
-                            onOpenEdit = { plantId ->
-                                scope.launch {
-                                    if (sheetState.isCollapsed) {
-                                        sheetState.expand()
-                                    } else {
-                                        sheetState.collapse()
-                                    }
-                                }
-                                lastPlantIdClicked.value = plantId
-                            },
-                            modifier = Modifier
-                                .width(100.dp)
-                                .height(140.dp)
-
+                WaterPlantGrid(
+                    stickyHeader = {
+                        StickyPlantsHeader(
+                            onAddNewPlantClick = { addNewPlant() },
+                            plants = state.plants,
+                            lastPlantIdClicked = lastPlantIdClicked.value,
+                            onEditPlant = { plantId -> editPlant(plantId) },
+                            onSelectPlant = { plantId -> selectPlant(plantId) },
+                            nextWatering = state.nextWateringDay,
+                            currentPlant = state.currentPlant
                         )
-
-                        if (plant.id == state.plants.last().id) {
-                            Spacer(modifier = Modifier.width(12.dp))
-                        }
-                    }
-                }
-
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp, 0.dp)
-                ) {
-
-
-                    if (state.nextWateringDay != -1L) {
-
-                        Column(modifier = Modifier.fillMaxWidth()) {
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp, 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-
-                                GlideImage(
-                                    imageModel = R.mipmap.watering_can,
-                                    contentScale = ContentScale.Inside,
-                                    colorFilter = ColorFilter.tint(MaterialTheme.colors.secondary),
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                )
-
-                                Text(
-                                    text = when (state.nextWateringDay) {
-                                        0L -> "Veuillez arroser la plante aujourd'hui !"
-                                        1L -> "Prochain arrosage dans ${state.nextWateringDay}) jour"
-                                        else -> "Prochain arrosage dans ${state.nextWateringDay} jours"
-                                    },
-                                    modifier = Modifier
-                                        .padding(8.dp),
-                                    style = MaterialTheme.typography.body1,
-                                    color = when (state.nextWateringDay) {
-                                        0L -> MaterialTheme.colors.secondary
-                                        else -> MaterialTheme.colors.background
-                                    }
-                                )
-                            }
-
-                            state.currentPlant?.name?.let { it ->
-
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                Row(modifier = Modifier.fillMaxWidth()) {
-                                    Text(
-                                        text = "Watering of the plant",
-                                        style = MaterialTheme.typography.h6,
-                                        color = MaterialTheme.colors.background
-                                    )
-
-                                    Text(
-                                        text = " $it",
-                                        style = MaterialTheme.typography.h6,
-                                        color = MaterialTheme.colors.primaryVariant
-                                    )
-                                }
-
-
-                            }
-
-                        }
-
-
-                    }
-
-                    if (lastPlantIdClicked.value != "-1") {
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        state.currentPlant?.waterPlants?.values?.let { it1 ->
-                            WaterPlantGrid(
-                                waterPlants = it1.toList()
-                            ) { picturePath ->
-                                viewModel.onEvent(PlantsEvent.ShowImage(picturePath))
-                                showImage.value = true
-                            }
-                        }
-                    }
+                    },
+                    waterPlants = waterPlants
+                ) { picturePath ->
+                    viewModel.onEvent(PlantsEvent.ShowImage(picturePath))
+                    showImage.value = true
                 }
 
             }
-
 
         }
 
@@ -367,6 +250,7 @@ fun PlantsScreen(
 
     }
 }
+
 
 
 
