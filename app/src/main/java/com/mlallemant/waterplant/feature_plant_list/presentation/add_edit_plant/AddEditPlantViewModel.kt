@@ -118,7 +118,7 @@ class AddEditPlantViewModel @Inject constructor(
                     }
 
                     try {
-                        plantUseCases.addPlant(
+                        plantUseCases.savePlant(
                             Plant(
                                 name = plantName.value.text,
                                 waterFrequency = waterFrequency.value.text,
@@ -127,9 +127,18 @@ class AddEditPlantViewModel @Inject constructor(
                                     .toString() else currentPlantId
                             )
                         )
-                        _eventFlow.emit(UiEvent.SavePlant)
-                        _loading.value = true
+                        if (currentPlantId == "-1") {
+                            _eventFlow.emit(UiEvent.SavePlant)
+                        } else {
+                            _eventFlow.emit(
+                                UiEvent.ShowSnackBar(
+                                    message = "Plant saved"
+                                )
+                            )
+                        }
+                        _loading.value = false
                     } catch (e: Exception) {
+                        _loading.value = false
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
                                 message = e.message ?: "Could not save plant !"

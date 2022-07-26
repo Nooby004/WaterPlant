@@ -1,5 +1,6 @@
 package com.mlallemant.waterplant.feature_plant_list.data.repository
 
+import android.util.Patterns
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -75,12 +76,14 @@ class PlantRepositoryImpl(
     }
 
 
-    override suspend fun addPlant(plant: Plant) {
+    override suspend fun savePlant(plant: Plant) {
 
         var plantToSave: Plant = plant
 
         try {
-            if (plant.picturePath.isNotEmpty()) {
+            if (plant.picturePath.isNotEmpty() && !Patterns.WEB_URL.matcher(plant.picturePath)
+                    .matches()
+            ) {
                 val file = File(plant.picturePath)
 
                 // get storage ref

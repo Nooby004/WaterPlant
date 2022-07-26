@@ -10,7 +10,7 @@ interface PlantRepository {
 
     suspend fun getPlant(plantId: String): Plant?
 
-    suspend fun addPlant(plant: Plant)
+    suspend fun savePlant(plant: Plant)
 
     suspend fun addWaterPlant(plantId: String, waterPlant: WaterPlant)
 

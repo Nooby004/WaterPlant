@@ -11,6 +11,6 @@ class AddPlantUseCase(
         if (plant.name.isBlank()) {
             throw Exception("The name of the plant can't be empty.")
         }
-        repository.addPlant(plant)
+        repository.savePlant(plant)
     }
 }
