@@ -19,12 +19,10 @@ import timber.log.Timber
 import java.io.File
 
 class PlantRepositoryImpl(
-    auth: FirebaseAuth,
+    private val auth: FirebaseAuth,
     private val databaseRootRef: DatabaseReference,
     private val storageRootRef: StorageReference
 ) : PlantRepository {
-
-    private val userId = auth.currentUser?.uid!!
 
     companion object {
         const val USERS_REF = "users"
@@ -52,7 +50,7 @@ class PlantRepositoryImpl(
             }
         }
 
-        val task = databaseRootRef.child(USERS_REF).child(userId).child(PLANTS_REF)
+        val task = databaseRootRef.child(USERS_REF).child(getUserId()).child(PLANTS_REF)
         task.addValueEventListener(valueEventListener)
 
         awaitClose {
@@ -64,7 +62,7 @@ class PlantRepositoryImpl(
 
         return try {
             val snapshot =
-                databaseRootRef.child(USERS_REF).child(userId).child(PLANTS_REF).child(plantId)
+                databaseRootRef.child(USERS_REF).child(getUserId()).child(PLANTS_REF).child(plantId)
                     .get()
                     .await()
             snapshot.getValue(Plant::class.java)
@@ -87,7 +85,7 @@ class PlantRepositoryImpl(
                 val file = File(plant.picturePath)
 
                 // get storage ref
-                val ref = storageRootRef.child(USERS_REF).child(userId).child(plant.id)
+                val ref = storageRootRef.child(USERS_REF).child(getUserId()).child(plant.id)
                     .child(MAIN_PICTURE)
 
                 // upload file
@@ -108,7 +106,7 @@ class PlantRepositoryImpl(
             }
 
             // save plant
-            databaseRootRef.child(USERS_REF).child(userId).child(PLANTS_REF).child(plant.id)
+            databaseRootRef.child(USERS_REF).child(getUserId()).child(PLANTS_REF).child(plant.id)
                 .setValue(plantToSave).await()
 
         } catch (e: Exception) {
@@ -128,7 +126,7 @@ class PlantRepositoryImpl(
                 val file = File(waterPlant.picturePath)
 
                 // get storage ref
-                val ref = storageRootRef.child(USERS_REF).child(userId).child(plantId)
+                val ref = storageRootRef.child(USERS_REF).child(getUserId()).child(plantId)
                     .child(waterPlant.timestamp.toString())
 
                 // upload file
@@ -149,7 +147,7 @@ class PlantRepositoryImpl(
             }
 
             // Save water plant
-            databaseRootRef.child(USERS_REF).child(userId).child(PLANTS_REF).child(plantId)
+            databaseRootRef.child(USERS_REF).child(getUserId()).child(PLANTS_REF).child(plantId)
                 .child(WATER_PLANT_REF).push()
                 .setValue(waterPlantToSave).await()
 
@@ -163,19 +161,28 @@ class PlantRepositoryImpl(
 
         try {
             // remove plant from database
-            databaseRootRef.child(USERS_REF).child(userId).child(PLANTS_REF).child(plantId)
+            databaseRootRef.child(USERS_REF).child(getUserId()).child(PLANTS_REF).child(plantId)
                 .removeValue().await()
 
             // remove all picture
-            storageRootRef.child(USERS_REF).child(userId).child(plantId).listAll().await().let {
-                it.items.forEach { item ->
-                    item.delete().await()
+            storageRootRef.child(USERS_REF).child(getUserId()).child(plantId).listAll().await()
+                .let {
+                    it.items.forEach { item ->
+                        item.delete().await()
+                    }
                 }
-            }
 
         } catch (e: Exception) {
             Timber.e(e)
             throw PlantException("Can't delete plant")
+        }
+    }
+
+    private fun getUserId(): String {
+        if (auth.currentUser != null) {
+            return auth.currentUser?.uid!!
+        } else {
+            throw PlantException("User is not logged")
         }
     }
 }
