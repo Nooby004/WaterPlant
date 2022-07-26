@@ -1,5 +1,6 @@
 package com.mlallemant.waterplant.feature_plant_list.presentation.add_edit_plant
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -35,6 +37,7 @@ fun AddEditPlantScreen(
     val focusManager = LocalFocusManager.current
     val showDialog = viewModel.showDialog.collectAsState().value
     val loading = viewModel.loading.collectAsState().value
+    val context = LocalContext.current
 
     val newPicturePathState = navController.currentBackStackEntry?.savedStateHandle?.getStateFlow(
         "picturePath",
@@ -57,7 +60,20 @@ fun AddEditPlantScreen(
                     )
                 }
                 is AddEditPlantViewModel.UiEvent.SavePlant -> {
-                    navController.navigateUp()
+                    if (event.creation) {
+                        Toast.makeText(
+                            context,
+                            "Plant added !",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navController.navigateUp()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Plant saved !",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
                 is AddEditPlantViewModel.UiEvent.DeletePlant -> {
                     navController.navigateUp()

@@ -29,7 +29,7 @@ object AppModule {
     fun providePlantUseCases(repository: PlantRepository): PlantUseCases {
         return PlantUseCases(
             getPlants = GetPlantsUseCase(repository),
-            savePlant = AddPlantUseCase(repository),
+            savePlant = SavePlantUseCase(repository),
             getPlant = GetPlantUseCase(repository),
             addWaterToPlant = AddWaterToPlantUseCase(repository),
             deletePlant = DeletePlantUseCase(repository),

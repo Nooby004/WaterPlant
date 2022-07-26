@@ -127,15 +127,8 @@ class AddEditPlantViewModel @Inject constructor(
                                     .toString() else currentPlantId
                             )
                         )
-                        if (currentPlantId == "-1") {
-                            _eventFlow.emit(UiEvent.SavePlant)
-                        } else {
-                            _eventFlow.emit(
-                                UiEvent.ShowSnackBar(
-                                    message = "Plant saved"
-                                )
-                            )
-                        }
+
+                        _eventFlow.emit(UiEvent.SavePlant(currentPlantId == "-1"))
                         _loading.value = false
                     } catch (e: Exception) {
                         _loading.value = false
@@ -178,7 +171,7 @@ class AddEditPlantViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class ShowSnackBar(val message: String) : UiEvent()
-        object SavePlant : UiEvent()
+        data class SavePlant(val creation: Boolean) : UiEvent()
         object DeletePlant : UiEvent()
     }
 }
