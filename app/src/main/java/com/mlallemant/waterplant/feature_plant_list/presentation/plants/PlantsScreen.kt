@@ -56,7 +56,7 @@ fun PlantsScreen(
     val systemUiController = rememberSystemUiController()
     systemUiController.setStatusBarColor(color = MaterialTheme.colors.primaryVariant)
     systemUiController.setNavigationBarColor(
-        color = MaterialTheme.colors.onBackground,
+        color = MaterialTheme.colors.primary,
         darkIcons = true,
         navigationBarContrastEnforced = true
     )
@@ -154,7 +154,7 @@ fun PlantsScreen(
                         .fillMaxWidth()
                         .height(50.dp)
                         .clip(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))
-                        .background(MaterialTheme.colors.primaryVariant),
+                        .background(MaterialTheme.colors.primary),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(

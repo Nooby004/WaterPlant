@@ -58,12 +58,12 @@ fun AuthPasswordTextField(
                     keyboardType = keyboardType
                 ),
                 colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = MaterialTheme.colors.primaryVariant.copy(alpha = 0.8f),
+                    backgroundColor = MaterialTheme.colors.primary,
                     disabledLabelColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     errorCursorColor = Color.Red,
-                    cursorColor = Color.Gray,
+                    cursorColor = MaterialTheme.colors.background,
                     textColor = MaterialTheme.colors.background,
                     errorIndicatorColor = Color.Transparent
                 ),
@@ -73,7 +73,7 @@ fun AuthPasswordTextField(
                 }),
                 modifier = modifier
                     .fillMaxWidth(0.85f),
-                label = { Text(hint, color = Color.Gray) },
+                label = { Text(hint, color = MaterialTheme.colors.background.copy(alpha = 0.7f)) },
                 visualTransformation = if (keyboardType != KeyboardType.Password || passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     if (keyboardType == KeyboardType.Password) {

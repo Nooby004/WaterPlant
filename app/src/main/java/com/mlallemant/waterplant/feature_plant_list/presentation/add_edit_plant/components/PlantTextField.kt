@@ -58,12 +58,12 @@ fun PlantTextField(
                         keyboardType = keyboardType
                     ),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = MaterialTheme.colors.primaryVariant.copy(alpha = 0.8f),
+                        backgroundColor = MaterialTheme.colors.primary,
                         disabledLabelColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         errorCursorColor = Color.Red,
-                        cursorColor = Color.Gray,
+                        cursorColor = MaterialTheme.colors.background,
                         textColor = MaterialTheme.colors.background,
                         errorIndicatorColor = Color.Transparent
                     ),
@@ -76,7 +76,12 @@ fun PlantTextField(
                         .onFocusChanged {
                             onFocusChange(it)
                         },
-                    label = { Text(title, color = Color.Gray) },
+                    label = {
+                        Text(
+                            title,
+                            color = MaterialTheme.colors.background.copy(alpha = 0.7f)
+                        )
+                    },
                 )
 
             }
